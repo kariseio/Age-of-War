@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import Turret.Missle;
 import Units.Unit;
 
 public class Player {
@@ -17,6 +18,7 @@ public class Player {
 	private ImageIcon baseImg;
 	
 	private ArrayList<Unit> units;
+	private ArrayList<Missle> missle;
 	
 	public Player(boolean isEnemy) {
 		units = new ArrayList<>();
@@ -26,14 +28,14 @@ public class Player {
 		gold = 150;
 		exp = 1;
 		turretSpace = 0;
-		tech = 0;
+		tech = 1;
 		
 		this.isEnemy = isEnemy;
 		
 		if(isEnemy == false) {
 			baseImg = new ImageIcon("src/Images/base1.png");
 		} else {
-			baseImg = new ImageIcon("src/Images/base1_enemy.png");
+			baseImg = new ImageIcon("src/Images/base1.png");
 		}
 	}
 	
@@ -75,6 +77,5 @@ public class Player {
 	public void hit(int power) {
 		if(health > 0)
 			health -= power;
-		
 	}
 }

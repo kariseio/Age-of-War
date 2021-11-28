@@ -22,7 +22,7 @@ public class Slingshotman extends Unit {
 			y = 450 - height;
 			image = new ImageIcon("src/Images/Slingshotman.png");
 		} else {
-			x = 870 - width;
+			x = 900 - width;
 			y = 450 - height;
 			image = new ImageIcon("src/Images/Slingshotman_enemy.png");
 		}

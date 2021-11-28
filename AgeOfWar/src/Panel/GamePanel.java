@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import Main.MainFrame;
 import Player.Player;
 import Units.Clubman;
+import Units.DinoRider;
 import Units.Slingshotman;
 import Units.Unit;
 
@@ -154,13 +155,15 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private class SelectPanel extends JPanel implements ActionListener {
 		private JButton buyUnit;
-		private JButton unit1;
-		private JButton unit2;
-		private JButton unit3;
 		private JButton buyTurret;
 		private JButton buyTurretSpace;
 		private JButton sellTurret;
 		private JButton upgrade;
+		private JButton back;
+		
+		private JButton clubman;
+		private JButton slingshotman;
+		private JButton dinoRider;
 		
 		private JLabel menuLabel;
 		
@@ -174,12 +177,60 @@ public class GamePanel extends JPanel implements Runnable {
 			setLayout(null);
 			setBackground(new Color(222, 184, 135));
 			
-			buyUnit = new JButton(new ImageIcon("src/Images/Clubman_Button.png"));
-			buyUnit.setBorderPainted(false);
+			buyUnit = new JButton(new ImageIcon("src/Images/Unit.png"));
 			buyUnit.setContentAreaFilled(false);
 			buyUnit.setFocusPainted(false);
 			buyUnit.setBounds(30, 40, 40, 40);
 			buyUnit.addActionListener(e -> {
+					setVisibleFalse();
+					showUnits();
+				}
+			);
+			add(buyUnit);
+			
+			buyTurret = new JButton(new ImageIcon("src/Images/Turret.png"));
+			buyTurret.setContentAreaFilled(false);
+			buyTurret.setFocusPainted(false);
+			buyTurret.setBounds(85, 40, 40, 40);
+			buyTurret.addActionListener(e -> {
+
+			});
+			add(buyTurret);
+			
+			buyTurretSpace = new JButton(new ImageIcon("src/Images/AddTurret.png"));
+			buyTurretSpace.setContentAreaFilled(false);
+			buyTurretSpace.setFocusPainted(false);
+			buyTurretSpace.setBounds(140, 40, 40, 40);
+			add(buyTurretSpace);
+			
+			sellTurret = new JButton(new ImageIcon("src/Images/SellTurret.png"));
+			sellTurret.setContentAreaFilled(false);
+			sellTurret.setFocusPainted(false);
+			sellTurret.setBounds(195, 40, 40, 40);
+			add(sellTurret);
+			
+			upgrade = new JButton(new ImageIcon("src/Images/Upgrade.png"));
+			upgrade.setContentAreaFilled(false);
+			upgrade.setFocusPainted(false);
+			upgrade.setBounds(250, 40, 40, 40);
+			add(upgrade);
+			
+			back = new JButton(new ImageIcon("src/Images/back.png"));
+			back.setContentAreaFilled(false);
+			back.setFocusPainted(false);
+			back.setBounds(250, 40, 40, 40);
+			back.setVisible(false);
+			back.addActionListener(e -> {
+				setVisibleTrue();
+				showUnits();
+			});
+			add(back);
+			
+			clubman = new JButton(new ImageIcon("src/Images/Clubman_Button.png"));
+			clubman.setContentAreaFilled(false);
+			clubman.setFocusPainted(false);
+			clubman.setBounds(30, 40, 40, 40);
+			clubman.addActionListener(e -> {
 					Clubman unit = new Clubman(false);
 					if(player.getGold() >= unit.getPrice() && queue.size() < 5) {
 						player.updateGold(-unit.getPrice());
@@ -187,13 +238,14 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			);
-			add(buyUnit);
+			clubman.setVisible(false);
+			add(clubman);
 			
-			unit1 = new JButton(new ImageIcon("src/Images/Clubman_Button.png"));
-			
-			buyTurret = new JButton(new ImageIcon("src/Images/Slingshotman_Button.png"));
-			buyTurret.setBounds(85, 40, 40, 40);
-			buyTurret.addActionListener(e -> {
+			slingshotman = new JButton(new ImageIcon("src/Images/Slingshotman_Button.png"));
+			slingshotman.setContentAreaFilled(false);
+			slingshotman.setFocusPainted(false);
+			slingshotman.setBounds(85, 40, 40, 40);
+			slingshotman.addActionListener(e -> {
 					Slingshotman unit = new Slingshotman(false);
 					if(player.getGold() >= unit.getPrice() && queue.size() < 5) {
 						player.updateGold(-unit.getPrice());
@@ -201,19 +253,52 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			);
-			add(buyTurret);
+			slingshotman.setVisible(false);
+			add(slingshotman);
 			
-			buyTurretSpace = new JButton();
-			buyTurretSpace.setBounds(140, 40, 40, 40);
-			add(buyTurretSpace);
-			
-			sellTurret = new JButton();
-			sellTurret.setBounds(195, 40, 40, 40);
-			add(sellTurret);
-			
-			upgrade = new JButton();
-			upgrade.setBounds(250, 40, 40, 40);
-			add(upgrade);
+			dinoRider = new JButton(new ImageIcon("src/Images/DinoRider_Button.png"));
+			dinoRider.setContentAreaFilled(false);
+			dinoRider.setFocusPainted(false);
+			dinoRider.setBounds(140, 40, 40, 40);
+			dinoRider.addActionListener(e -> {
+					DinoRider unit = new DinoRider(false);
+					if(player.getGold() >= unit.getPrice() && queue.size() < 5) {
+						player.updateGold(-unit.getPrice());
+						queue.add(unit);
+					}
+				}
+			);
+			dinoRider.setVisible(false);
+			add(dinoRider);
+		}
+		
+		public void setVisibleFalse() {
+			buyUnit.setVisible(false);
+			buyTurret.setVisible(false);
+			buyTurretSpace.setVisible(false);
+			sellTurret.setVisible(false);
+			upgrade.setVisible(false);
+			back.setVisible(true);
+		}
+		
+		public void setVisibleTrue() {
+			buyUnit.setVisible(true);
+			buyTurret.setVisible(true);
+			buyTurretSpace.setVisible(true);
+			sellTurret.setVisible(true);
+			upgrade.setVisible(true);
+			back.setVisible(false);
+			clubman.setVisible(false);
+			slingshotman.setVisible(false);
+			dinoRider.setVisible(false);
+		}
+		
+		public void showUnits() {
+			if(player.getTech() == 1) {
+				clubman.setVisible(true);
+				slingshotman.setVisible(true);
+				dinoRider.setVisible(true);
+			}
 		}
 		
 		public void paintComponent(Graphics g) {
@@ -223,9 +308,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 
 		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == unit1 || e.getSource() == unit2 || e.getSource() == unit3) {
-				
-			}
 		}
 	}
 	
@@ -236,17 +318,19 @@ public class GamePanel extends JPanel implements Runnable {
 		buffer = bufImage.getGraphics();
 		
 		buffer.drawImage(background, 0, 0, null); // 배경 이미지
-		buffer.drawImage(player.getBaseImg().getImage(), -30, 310, null); // 아군 기지 시작 X : 100
-		buffer.drawImage(enemy.getBaseImg().getImage(), 860, 310, null); // 적군 기지 시작 X : 870
+		buffer.drawImage(player.getBaseImg().getImage(), -100, 310, null); // 아군 기지 시작 X : 100
+		buffer.drawImage(enemy.getBaseImg().getImage(), 870+232, 310, 870, 310+169, 0, 0, 232, 169, this); // 적군 기지 시작 X : 900
 		
+		// 대기열
 		buffer.setColor(Color.GRAY);
 		buffer.drawRect(220, 10, 400, 15);
-		if(queueCount != 0)
-			buffer.fillRect(220, 10, 400/50 * queueCount, 15);
-		
 		for(int i = 0; i < 5; i++) {
 			buffer.drawRect(220+20*i, 35, 15, 15);
 		}
+		
+		buffer.setColor(Color.RED);
+		if(queueCount != 0)
+			buffer.fillRect(220, 10, 400/50 * queueCount, 15);
 		for(int i = 0; i < queue.size(); i++) {
 			buffer.fillRect(220+20*i, 35, 15, 15);
 		}
