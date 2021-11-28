@@ -6,14 +6,16 @@ import Player.Player;
 
 public class DinoRider extends Unit {
 	public DinoRider(boolean isEnemy) {
-		maxHealth = 100;
-		health = 100;
-		power = 10;
+		maxHealth = 200;
+		health = 200;
+		power = 20;
 		range = 10;
 		speed = 1;
 		
-		width = 100;
-		height = 60;
+		image = new ImageIcon("src/Images/DinoRider.png");
+		
+		width = image.getIconWidth();
+		height = image.getIconHeight();
 		
 		price = 100;
 		
@@ -24,9 +26,11 @@ public class DinoRider extends Unit {
 			y = 450 - height;
 			image = new ImageIcon("src/Images/DinoRider.png");
 		} else {
-			x = 900 - width;
+			x = 870 - width;
 			y = 450 - height;
 			image = new ImageIcon("src/Images/DinoRider.png");
 		}
+		
+		
 	}
 }

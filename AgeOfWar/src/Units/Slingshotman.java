@@ -10,8 +10,10 @@ public class Slingshotman extends Unit {
 		range = 90;
 		speed = 1;
 		
-		width = 40;
-		height = 60;
+		image = new ImageIcon("src/Images/Slingshotman.png");
+		
+		width = image.getIconWidth();
+		height = image.getIconHeight();
 		
 		price = 15;
 		
@@ -22,9 +24,11 @@ public class Slingshotman extends Unit {
 			y = 450 - height;
 			image = new ImageIcon("src/Images/Slingshotman.png");
 		} else {
-			x = 900 - width;
+			x = 870 - width;
 			y = 450 - height;
 			image = new ImageIcon("src/Images/Slingshotman_enemy.png");
 		}
+		
+		
 	}
 }

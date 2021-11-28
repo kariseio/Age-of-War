@@ -27,16 +27,12 @@ public class Player {
 		health = 500;
 		gold = 150;
 		exp = 1;
-		turretSpace = 0;
+		turretSpace = 1;
 		tech = 1;
 		
 		this.isEnemy = isEnemy;
 		
-		if(isEnemy == false) {
-			baseImg = new ImageIcon("src/Images/base1.png");
-		} else {
-			baseImg = new ImageIcon("src/Images/base1.png");
-		}
+		baseImg = new ImageIcon("src/Images/base"+tech+".png");
 	}
 	
 	public void updateGold(int gold) {
@@ -63,9 +59,11 @@ public class Player {
 	public int getGold() {
 		return gold;
 	}
-	
 	public int getExp() {
 		return exp;
+	}
+	public int getTurretSpace() {
+		return turretSpace;
 	}
 	public int getTech() {
 		return tech;
@@ -77,5 +75,9 @@ public class Player {
 	public void hit(int power) {
 		if(health > 0)
 			health -= power;
+	}
+	
+	public void buildTurretSpace() {
+		turretSpace++;
 	}
 }

@@ -12,8 +12,10 @@ public class Clubman extends Unit {
 		range = 10;
 		speed = 1;
 		
-		width = 40;
-		height = 60;
+		image = new ImageIcon("src/Images/Clubman.png");
+		
+		width = image.getIconWidth();
+		height = image.getIconHeight();
 		
 		price = 15;
 		
@@ -24,7 +26,7 @@ public class Clubman extends Unit {
 			y = 450 - height;
 			image = new ImageIcon("src/Images/Clubman.png");
 		} else {
-			x = 900 - width;
+			x = 870 - width;
 			y = 450 - height;
 			image = new ImageIcon("src/Images/Clubman_enemy.png");
 		}
