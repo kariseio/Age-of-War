@@ -17,25 +17,34 @@ import javax.swing.JPanel;
 
 import Main.MainFrame;
 import Player.Player;
+import Turret.Bullet;
+import Turret.RockSlingshot;
+import Turret.Turret;
 import Units.Clubman;
 import Units.DinoRider;
 import Units.Slingshotman;
 import Units.Unit;
 
 public class GamePanel extends JPanel implements Runnable {
-	private Player player = new Player(false);
-	private Player enemy = new Player(true);
+	private Player player = new Player(false); // 플레이어
+	private Player enemy = new Player(true); // 적
 	
-	private ArrayList<Unit> player_Character = player.getUnits();
-	private ArrayList<Unit> enemy_Character = enemy.getUnits();
-	private Queue<Unit> queue = new LinkedList<>();
+	private ArrayList<Unit> player_Character = player.getUnits(); // 플레이어 유닛 리스트
+	private ArrayList<Unit> enemy_Character = enemy.getUnits(); // 적군 유닛 리스트
+	private Turret[] player_Turrets = player.getTurrets();
+	private Turret[] enemy_Turrets = enemy.getTurrets();
+	private ArrayList<Bullet> player_Bullet = player.getBullets(); // 플레이어 총알
+	private ArrayList<Bullet> enemy_Bullet = enemy.getBullets(); // 적 총알
+	private Queue<Unit> queue = new LinkedList<>(); // 유닛 뽑을 때 대기열
 	
-	private JLabel playerHealth;
-	private JLabel enemyHealth;
+	private JLabel playerHealth; // 플레이어 체력 수치
+	private JLabel enemyHealth; // 적 체력 수치
 	
-	private JButton[] tSpace;
+	private JButton[] tSpace; // 터렛 공간
+	private JButton[] sellTS;
 	
 	private int queueCount;
+	private String selectedTurret;
 	
 	Thread th; // 쓰레드
 	Image bufImage; // 더블버퍼링용
@@ -70,28 +79,60 @@ public class GamePanel extends JPanel implements Runnable {
 		add(selectPanel);
 		
 		tSpace = new JButton[4];
+		sellTS = new JButton[4];
 		
 		for(int i = 0; i < 4; i++) {
 			tSpace[i] = new JButton(new ImageIcon("src/Images/turretSpace.png"));
-			tSpace[i].setBounds(25, 310 - 40 * i, 40, 40);
+			tSpace[i].setBounds(25, 350 - 40 * i, 40, 40);
 			tSpace[i].setBorderPainted(false);
 			tSpace[i].setContentAreaFilled(false);
 			tSpace[i].setFocusPainted(false);
 			tSpace[i].setVisible(false);
 			add(tSpace[i]);
 		}
+		tSpace[0].addActionListener(e -> {
+			player.addTurrets(0, selectedTurret, false);
+			selectPanel.closeTurretSpace();
+		});
+		tSpace[1].addActionListener(e -> {
+			player.addTurrets(1, selectedTurret, false);
+			selectPanel.closeTurretSpace();
+		});
+		tSpace[2].addActionListener(e -> {
+			player.addTurrets(2, selectedTurret, false);
+			selectPanel.closeTurretSpace();
+		});
+		tSpace[3].addActionListener(e -> {
+			player.addTurrets(3, selectedTurret, false);
+			selectPanel.closeTurretSpace();
+		});
 		
-//		for(int i = 0; i < 4; i++) {
-//			ts[i] = new JLabel(new ImageIcon("src/Images/TS1.png"));
-//			ts[i].setBounds(10, 290 - 40 * i, 60, 60);
-//			add(ts[i]);
-//			
-//			ets[i] = new JLabel(new ImageIcon("src/Images/TS1.png"));
-//			ets[i].setBounds(905, 290 - 40 * i, 60, 60);
-//			add(ets[i]);
-//		}
+		for(int i = 0; i < 4; i++) {
+			sellTS[i] = new JButton(new ImageIcon("src/Images/turretSpace.png"));
+			sellTS[i].setBounds(25, 350 - 40 * i, 40, 40);
+			sellTS[i].setBorderPainted(false);
+			sellTS[i].setContentAreaFilled(false);
+			sellTS[i].setFocusPainted(false);
+			sellTS[i].setVisible(false);
+			add(sellTS[i]);
+		}
 		
-		
+		sellTS[0].addActionListener(e -> {
+			player.sellTurret(0);
+			selectPanel.closeTurretSpace();
+		});
+		sellTS[1].addActionListener(e -> {
+			player.sellTurret(1);
+			selectPanel.closeTurretSpace();
+		});
+		sellTS[2].addActionListener(e -> {
+			player.sellTurret(2);
+			selectPanel.closeTurretSpace();
+		});
+		sellTS[3].addActionListener(e -> {
+			player.sellTurret(3);
+			selectPanel.closeTurretSpace();
+		});
 		
 		th = new Thread(this);
 		th.start();
@@ -116,8 +157,8 @@ public class GamePanel extends JPanel implements Runnable {
 			
 			infoPanel.update(player.getGold(), player.getExp());
 			
-			playerHealth.setText("" + (int)player.getHealth());
-			enemyHealth.setText("" + (int)enemy.getHealth());
+			playerHealth.setText("" + (int)player.getHealth()); // 플레이어 체력 업데이트
+			enemyHealth.setText("" + (int)enemy.getHealth()); // 적군 체력 업데이트
 			
 			repaint();
 			
@@ -163,7 +204,7 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 	
-	private class SelectPanel extends JPanel implements ActionListener {
+	private class SelectPanel extends JPanel {
 		private JButton buyUnit;
 		private JButton buyTurret;
 		private JButton buyTurretSpace;
@@ -224,6 +265,16 @@ public class GamePanel extends JPanel implements Runnable {
 						player.updateGold(-1000);
 						player.buildTurretSpace();
 					}
+				} else if(player.getTurretSpace() == 2) {
+					if(player.getGold() > 4000) {
+						player.updateGold(-4000);
+						player.buildTurretSpace();
+					}
+				} else if(player.getTurretSpace() == 3) {
+					if(player.getGold() > 7500) {
+						player.updateGold(-7500);
+						player.buildTurretSpace();
+					}
 				}
 			});
 			add(buyTurretSpace);
@@ -232,6 +283,10 @@ public class GamePanel extends JPanel implements Runnable {
 			sellTurret.setContentAreaFilled(false);
 			sellTurret.setFocusPainted(false);
 			sellTurret.setBounds(195, 40, 40, 40);
+			sellTurret.addActionListener(e -> {
+				menuOff();
+				showSellTurretSpace();
+			});
 			add(sellTurret);
 			
 			upgrade = new JButton(new ImageIcon("src/Images/Upgrade.png"));
@@ -301,6 +356,7 @@ public class GamePanel extends JPanel implements Runnable {
 			rockSlingshot.setBounds(30, 40, 40, 40);
 			rockSlingshot.addActionListener(e -> {
 				showTurretSpace();
+				selectedTurret = "RockSlingshot";
 				}
 			);
 			rockSlingshot.setVisible(false);
@@ -312,6 +368,7 @@ public class GamePanel extends JPanel implements Runnable {
 			eggAutomatic.setBounds(85, 40, 40, 40);
 			eggAutomatic.addActionListener(e -> {
 				showTurretSpace();
+				selectedTurret = "EggAutomatic";
 				}
 			);
 			eggAutomatic.setVisible(false);
@@ -323,6 +380,7 @@ public class GamePanel extends JPanel implements Runnable {
 			primitiveCatapult.setBounds(140, 40, 40, 40);
 			primitiveCatapult.addActionListener(e -> {
 				showTurretSpace();
+				selectedTurret = "PrimitiveCatapult";
 				}
 			);
 			primitiveCatapult.setVisible(false);
@@ -388,7 +446,8 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		public void showTurretSpace() { // 터렛 공간 보여줌
 			for(int i = 0; i < player.getTurretSpace(); i++) {
-				tSpace[i].setVisible(true);
+				if(player.getHasTurret(i) == false)
+					tSpace[i].setVisible(true);
 			}
 			hideAll();
 			cancelButton.setVisible(true);
@@ -397,18 +456,26 @@ public class GamePanel extends JPanel implements Runnable {
 		public void closeTurretSpace() { // 터렛 공간 끔
 			for(int i = 0; i < player.getTurretSpace(); i++) {
 				tSpace[i].setVisible(false);
+				sellTS[i].setVisible(false);
 			}
 			menuOn();
 			cancelButton.setVisible(false);
 		}
 		
+		public void showSellTurretSpace() { // 터렛 판매 공간 보여줌
+			for(int i = 0; i < player.getTurretSpace(); i++) {
+				if(player.getHasTurret(i) == true) {
+					System.out.println("여기요");
+					sellTS[i].setVisible(true);
+				}
+			}
+			hideAll();
+			cancelButton.setVisible(true);
+		}
+		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(new ImageIcon("src/Images/SelectPanelImg.png").getImage(), 0, 0, null);
-		}
-
-
-		public void actionPerformed(ActionEvent e) {
 		}
 	}
 	
@@ -436,10 +503,24 @@ public class GamePanel extends JPanel implements Runnable {
 			buffer.fillRect(220+20*i, 35, 15, 15);
 		}
 		
-		// 터렛 그리기
-		for(int i = 0; i < player.getTurretSpace(); i++) {
-			buffer.drawImage(new ImageIcon("src/Images/TS"+player.getTech()+"_"+(i+1)+".png").getImage(), 10, 290 - 40 * i, 70, 70, null);
-			buffer.drawImage(new ImageIcon("src/Images/TS"+enemy.getTech()+"_"+(i+1)+".png").getImage(), 904, 290 - 40 * i, 70, 70, null);
+		// 아군 터렛 공간 그리기
+		for(int i = 1; i < player.getTurretSpace(); i++) {
+			buffer.drawImage(new ImageIcon("src/Images/TS"+player.getTech()+"_"+i+".png").getImage(), 10, 330 - 40 * i, 70, 70, null);
+		}
+		
+		// 적군 터렛 공간 그리기
+		for(int i = 1; i < enemy.getTurretSpace(); i++) {
+			buffer.drawImage(new ImageIcon("src/Images/TS"+enemy.getTech()+"_"+i+".png").getImage(), 904, 330 - 40 * i, 70, 70, null);
+		}
+		
+		// 설치된 터렛 그리기
+		for(int i = 0; i < 4; i++) {
+			if(player.getHasTurret(i) == true) {
+				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), 25, 350 - 40 * i, player_Turrets[i].getImageIcon().getIconWidth(), player_Turrets[i].getImageIcon().getIconHeight(), null);
+			}
+			if(enemy.getHasTurret(i) == true) {
+				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), 905, 350 - 40 * i, 70, 70, null);
+			}
 		}
 		
 		// 아군 유닛 그리기
@@ -468,6 +549,12 @@ public class GamePanel extends JPanel implements Runnable {
 				buffer.setColor(Color.GRAY);
 				buffer.fillRect(unit.getX() + 5, unit.getY() - 5, (int) (unit.getWidth() / (unit.getMaxHealth() / (double)(unit.getMaxHealth() - unit.getHealth()))) , 3);
 			}
+		}
+		
+		// bullet 그리기
+		for(int i = 0; i < player_Bullet.size(); i++) {
+			Bullet bullet = player_Bullet.get(i);
+			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+".png").getImage(), bullet.getX(), bullet.getY(), null);
 		}
 		
 		// 플레이어 체력 바
@@ -514,6 +601,16 @@ public class GamePanel extends JPanel implements Runnable {
 				player_Character.remove(i);
 			}
 		}
+		
+		for(int i = 0; i < 4; i++) { // 플레이어 터렛 action
+			if(player.getHasTurret(i) == true) {
+				player_Turrets[i].shoot(player, enemy);
+			}
+		}
+		
+		for(int i = 0; i < player_Bullet.size(); i++) { // 플레이어 bullet action
+			player_Bullet.get(i).action();
+		}
 	}
 	
 	public void enemyAction() { // 적 행동
@@ -535,6 +632,15 @@ public class GamePanel extends JPanel implements Runnable {
 				player.updateGold((int)(unit.getPrice() * 1.5));
 				enemy_Character.remove(i);
 			}
+		}
+		
+		for(int i = 0; i < 4; i++) { // 적군 터렛 action
+			if(enemy.getHasTurret(i) == true)
+				enemy_Turrets[i].shoot(player, enemy);
+		}
+		
+		for(int i = 0; i < player_Bullet.size(); i++) { // 적군 bullet action
+			player_Bullet.get(i).action();
 		}
 	}
 }
