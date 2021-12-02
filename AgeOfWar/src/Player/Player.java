@@ -32,8 +32,8 @@ public class Player {
 		hasTurret = new boolean[4];
 		bullets = new ArrayList<>();
 		
-		maxHealth = 500;
-		health = 500;
+		maxHealth = 50000;
+		health = 50000;
 		gold = 150;
 		exp = 1;
 		turretSpace = 4;

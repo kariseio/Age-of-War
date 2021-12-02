@@ -516,11 +516,17 @@ public class GamePanel extends JPanel implements Runnable {
 		// 설치된 터렛 그리기
 		for(int i = 0; i < 4; i++) {
 			if(player.getHasTurret(i) == true) {
-				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), 25, 350 - 40 * i, player_Turrets[i].getImageIcon().getIconWidth(), player_Turrets[i].getImageIcon().getIconHeight(), null);
+				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), player_Turrets[i].getX(), player_Turrets[i].getY(), player_Turrets[i].getImageIcon().getIconWidth(), player_Turrets[i].getImageIcon().getIconHeight(), null);
 			}
 			if(enemy.getHasTurret(i) == true) {
-				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), 905, 350 - 40 * i, 70, 70, null);
+				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), enemy_Turrets[i].getX(), enemy_Turrets[i].getY(), enemy_Turrets[i].getImageIcon().getIconWidth(), enemy_Turrets[i].getImageIcon().getIconHeight(), null);
 			}
+		}
+		
+		// bullet 그리기
+		for(int i = 0; i < player_Bullet.size(); i++) {
+			Bullet bullet = player_Bullet.get(i);
+			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+".png").getImage(), bullet.getX(), bullet.getY(), null);
 		}
 		
 		// 아군 유닛 그리기
@@ -549,12 +555,6 @@ public class GamePanel extends JPanel implements Runnable {
 				buffer.setColor(Color.GRAY);
 				buffer.fillRect(unit.getX() + 5, unit.getY() - 5, (int) (unit.getWidth() / (unit.getMaxHealth() / (double)(unit.getMaxHealth() - unit.getHealth()))) , 3);
 			}
-		}
-		
-		// bullet 그리기
-		for(int i = 0; i < player_Bullet.size(); i++) {
-			Bullet bullet = player_Bullet.get(i);
-			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+".png").getImage(), bullet.getX(), bullet.getY(), null);
 		}
 		
 		// 플레이어 체력 바
@@ -609,12 +609,23 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 		
 		for(int i = 0; i < player_Bullet.size(); i++) { // 플레이어 bullet action
-			player_Bullet.get(i).action();
+			Bullet bullet = player_Bullet.get(i);
+			bullet.action();
+			
+			if(bullet.getY() > 450) // 바닥에 박힘
+				player_Bullet.remove(i);
+			
+			for(int j = 0; j < enemy_Character.size(); j++) { // 피격 체크
+				if(isHit(bullet.getX(), bullet.getY(), enemy_Character.get(j))) {
+					enemy_Character.get(j).hit(bullet.getDamage());
+					player_Bullet.remove(i);
+				}
+			}
 		}
 	}
 	
 	public void enemyAction() { // 적 행동
-		if(Math.random()*5000 < 10) {
+		if(Math.random()*5000 < 20) {
 			enemy_Character.add(new Clubman(true));
 		}
 		
@@ -642,6 +653,13 @@ public class GamePanel extends JPanel implements Runnable {
 		for(int i = 0; i < player_Bullet.size(); i++) { // 적군 bullet action
 			player_Bullet.get(i).action();
 		}
+	}
+	
+	public boolean isHit(int x, int y, Unit unit) {
+		if(x > unit.getX() && x < unit.getX() + unit.getWidth() && y > unit.getY() && y < unit.getY() + unit.getHeight())
+			return true;
+		else 
+			return false;
 	}
 }
 
