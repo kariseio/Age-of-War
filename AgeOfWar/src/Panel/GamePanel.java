@@ -43,6 +43,9 @@ public class GamePanel extends JPanel implements Runnable {
 	private JButton[] tSpace; // 터렛 공간
 	private JButton[] sellTS;
 	
+	private JButton xSpeed;
+	private int gameSpeed = 1;
+	
 	private int queueCount;
 	private String selectedTurret;
 	
@@ -79,7 +82,6 @@ public class GamePanel extends JPanel implements Runnable {
 		add(selectPanel);
 		
 		tSpace = new JButton[4];
-		sellTS = new JButton[4];
 		
 		for(int i = 0; i < 4; i++) {
 			tSpace[i] = new JButton(new ImageIcon("src/Images/turretSpace.png"));
@@ -107,6 +109,8 @@ public class GamePanel extends JPanel implements Runnable {
 			selectPanel.closeTurretSpace();
 		});
 		
+		sellTS = new JButton[4];
+		
 		for(int i = 0; i < 4; i++) {
 			sellTS[i] = new JButton(new ImageIcon("src/Images/turretSpace.png"));
 			sellTS[i].setBounds(25, 350 - 40 * i, 40, 40);
@@ -133,6 +137,27 @@ public class GamePanel extends JPanel implements Runnable {
 			player.sellTurret(3);
 			selectPanel.closeTurretSpace();
 		});
+		
+		xSpeed = new JButton("x1");
+		xSpeed.setBounds(5, 105, 50, 50);
+		xSpeed.setVisible(true);
+		xSpeed.addActionListener(e -> {
+			if(gameSpeed == 1) {
+				gameSpeed = 2;
+				xSpeed.setText("x2");
+			} else if(gameSpeed == 2) {
+				gameSpeed = 4;
+				xSpeed.setText("x4");
+			} else if(gameSpeed == 4) {
+				gameSpeed = 1;
+				xSpeed.setText("x1");
+			} 
+		});
+		add(xSpeed);
+		
+//		enemy.addTurrets(0, "RockSlingshot", true);
+//		enemy.addTurrets(1, "EggAutomatic", true);
+//		enemy.addTurrets(2, "PrimitiveCatapult", true);
 		
 		th = new Thread(this);
 		th.start();
@@ -163,7 +188,7 @@ public class GamePanel extends JPanel implements Runnable {
 			repaint();
 			
 			try {
-				Thread.sleep(16);
+				Thread.sleep(32 / gameSpeed);
 			}
 			catch(Exception e) {
 				return;
@@ -279,7 +304,7 @@ public class GamePanel extends JPanel implements Runnable {
 			});
 			add(buyTurretSpace);
 			
-			sellTurret = new JButton(new ImageIcon("src/Images/SellTurret.png"));
+			sellTurret = new JButton(new ImageIcon("src/Images/SellTurret.png")); // 터렛 판매
 			sellTurret.setContentAreaFilled(false);
 			sellTurret.setFocusPainted(false);
 			sellTurret.setBounds(195, 40, 40, 40);
@@ -289,10 +314,29 @@ public class GamePanel extends JPanel implements Runnable {
 			});
 			add(sellTurret);
 			
-			upgrade = new JButton(new ImageIcon("src/Images/Upgrade.png"));
+			upgrade = new JButton(new ImageIcon("src/Images/Upgrade.png")); // 테크 업그레이드
 			upgrade.setContentAreaFilled(false);
 			upgrade.setFocusPainted(false);
 			upgrade.setBounds(250, 40, 40, 40);
+			upgrade.addActionListener(e -> {
+				if(player.getTech() == 1) {
+					if(player.getExp() >= 4000) {
+						player.techUp();
+					}
+				} else if(player.getTech() == 2) {
+					if(player.getExp() >= 14000) {
+						player.techUp();
+					}
+				} else if(player.getTech() == 3) {
+					if(player.getExp() >= 45000) {
+						player.techUp();
+					}
+				} else if(player.getTech() == 4) {
+					if(player.getExp() >= 200000) {
+						player.techUp();
+					}
+				}
+			});
 			add(upgrade);
 			
 			back = new JButton(new ImageIcon("src/Images/back.png"));
@@ -350,11 +394,15 @@ public class GamePanel extends JPanel implements Runnable {
 			dinoRider.setVisible(false);
 			add(dinoRider);
 			
+			
+			// Turrets
 			rockSlingshot = new JButton(new ImageIcon("src/Images/RockSlingshot_Button.png"));
 			rockSlingshot.setContentAreaFilled(false);
 			rockSlingshot.setFocusPainted(false);
 			rockSlingshot.setBounds(30, 40, 40, 40);
 			rockSlingshot.addActionListener(e -> {
+				if(player.getGold() < 100) return; // 100원
+				
 				showTurretSpace();
 				selectedTurret = "RockSlingshot";
 				}
@@ -367,6 +415,8 @@ public class GamePanel extends JPanel implements Runnable {
 			eggAutomatic.setFocusPainted(false);
 			eggAutomatic.setBounds(85, 40, 40, 40);
 			eggAutomatic.addActionListener(e -> {
+				if(player.getGold() < 200) return; // 200원
+				
 				showTurretSpace();
 				selectedTurret = "EggAutomatic";
 				}
@@ -379,6 +429,8 @@ public class GamePanel extends JPanel implements Runnable {
 			primitiveCatapult.setFocusPainted(false);
 			primitiveCatapult.setBounds(140, 40, 40, 40);
 			primitiveCatapult.addActionListener(e -> {
+				if(player.getGold() < 500) return; // 500원
+				
 				showTurretSpace();
 				selectedTurret = "PrimitiveCatapult";
 				}
@@ -465,7 +517,6 @@ public class GamePanel extends JPanel implements Runnable {
 		public void showSellTurretSpace() { // 터렛 판매 공간 보여줌
 			for(int i = 0; i < player.getTurretSpace(); i++) {
 				if(player.getHasTurret(i) == true) {
-					System.out.println("여기요");
 					sellTS[i].setVisible(true);
 				}
 			}
@@ -519,13 +570,19 @@ public class GamePanel extends JPanel implements Runnable {
 				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), player_Turrets[i].getX(), player_Turrets[i].getY(), player_Turrets[i].getImageIcon().getIconWidth(), player_Turrets[i].getImageIcon().getIconHeight(), null);
 			}
 			if(enemy.getHasTurret(i) == true) {
-				buffer.drawImage(player_Turrets[i].getImageIcon().getImage(), enemy_Turrets[i].getX(), enemy_Turrets[i].getY(), enemy_Turrets[i].getImageIcon().getIconWidth(), enemy_Turrets[i].getImageIcon().getIconHeight(), null);
+				buffer.drawImage(enemy_Turrets[i].getImageIcon().getImage(), enemy_Turrets[i].getX(), enemy_Turrets[i].getY(), enemy_Turrets[i].getImageIcon().getIconWidth(), enemy_Turrets[i].getImageIcon().getIconHeight(), null);
 			}
 		}
 		
-		// bullet 그리기
+		// 아군 bullet 그리기
 		for(int i = 0; i < player_Bullet.size(); i++) {
 			Bullet bullet = player_Bullet.get(i);
+			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+".png").getImage(), bullet.getX(), bullet.getY(), null);
+		}
+		
+		// 적군 bullet 그리기
+		for(int i = 0; i < enemy_Bullet.size(); i++) {
+			Bullet bullet = enemy_Bullet.get(i);
 			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+".png").getImage(), bullet.getX(), bullet.getY(), null);
 		}
 		
@@ -591,13 +648,16 @@ public class GamePanel extends JPanel implements Runnable {
 			th.interrupt();
 			mainFrame.setResultPanel(false);
 		}
-			
+		
 		for(int i = 0; i < player_Character.size(); i++) {
 			Unit unit = player_Character.get(i);
 			unit.action(player, enemy, i);
 			
 			if(unit.getHealth() <= 0) { // 삭제되는 조건 (체력0) 
-				enemy.updateGold((int)(unit.getPrice() * 1.5));
+				int reward = (int) Math.round(unit.getPrice() * 1.3);
+				enemy.updateGold(reward);
+				enemy.updateExp(reward * 2);
+				player.updateExp(Math.round(reward / 2));
 				player_Character.remove(i);
 			}
 		}
@@ -625,7 +685,7 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void enemyAction() { // 적 행동
-		if(Math.random()*5000 < 20) {
+		if(Math.random()*1000 < 5) {
 			enemy_Character.add(new Clubman(true));
 		}
 		
@@ -640,7 +700,10 @@ public class GamePanel extends JPanel implements Runnable {
 			unit.action(player, enemy, i);
 			
 			if(unit.getHealth() <= 0) { // 삭제되는 조건 (체력0)
-				player.updateGold((int)(unit.getPrice() * 1.5));
+				int reward = (int) Math.round(unit.getPrice() * 1.3);
+				player.updateGold(reward);
+				player.updateExp(reward * 2);
+				enemy.updateExp(Math.round(reward / 2));
 				enemy_Character.remove(i);
 			}
 		}
@@ -650,8 +713,34 @@ public class GamePanel extends JPanel implements Runnable {
 				enemy_Turrets[i].shoot(player, enemy);
 		}
 		
-		for(int i = 0; i < player_Bullet.size(); i++) { // 적군 bullet action
-			player_Bullet.get(i).action();
+		for(int i = 0; i < player_Bullet.size(); i++) { // 플레이어 bullet action
+			Bullet bullet = player_Bullet.get(i);
+			bullet.action();
+			
+			if(bullet.getY() > 450) // 바닥에 박힘
+				player_Bullet.remove(i);
+			
+			for(int j = 0; j < enemy_Character.size(); j++) { // 피격 체크
+				if(isHit(bullet.getX(), bullet.getY(), enemy_Character.get(j))) {
+					enemy_Character.get(j).hit(bullet.getDamage());
+					player_Bullet.remove(i);
+				}
+			}
+		}
+		
+		for(int i = 0; i < enemy_Bullet.size(); i++) { // 적군 bullet action
+			Bullet bullet = enemy_Bullet.get(i);
+			bullet.action();
+			
+			if(bullet.getY() > 450) // 바닥에 박힘
+				enemy_Bullet.remove(i);
+			
+			for(int j = 0; j < player_Character.size(); j++) { // 피격 체크
+				if(isHit(bullet.getX(), bullet.getY(), player_Character.get(j))) {
+					player_Character.get(j).hit(bullet.getDamage());
+					enemy_Bullet.remove(i);
+				}
+			}
 		}
 	}
 	

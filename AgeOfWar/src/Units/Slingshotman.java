@@ -4,10 +4,10 @@ import javax.swing.ImageIcon;
 
 public class Slingshotman extends Unit {
 	public Slingshotman(boolean isEnemy) {
-		maxHealth = 80;
-		health = 80;
-		power = 10;
-		range = 90;
+		maxHealth = 42;
+		health = 42;
+		power = 8;
+		range = 100;
 		speed = 1;
 		
 		image = new ImageIcon("src/Images/Slingshotman.png");
@@ -15,7 +15,7 @@ public class Slingshotman extends Unit {
 		width = image.getIconWidth();
 		height = image.getIconHeight();
 		
-		price = 15;
+		price = 25;
 		
 		this.isEnemy = isEnemy;
 		

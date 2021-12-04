@@ -22,8 +22,9 @@ public class Bullet {
 	}
 	
 	public void action() {
-		x = x + Math.cos(degree * 0.995) * speed;
-		y = y + Math.sin(degree * 0.995) * speed;
+//		degree = degree * 0.995;
+		x = x + Math.cos(degree) * speed;
+		y = y + Math.sin(degree) * speed;
 	}
 	
 	public int getBulletId() {

@@ -14,7 +14,6 @@ public class Turret {
 	protected int range;
 	protected int price;
 	
-	
 	protected boolean isEnemy;
 	
 	protected int timeCount;
@@ -40,10 +39,22 @@ public class Turret {
 		if(isEnemy == false) { // 내꺼
 			if(enemy.getUnits().size() == 0) return;
 			
-//			System.out.println(dist(x, y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY()));
 			if(dist(x, y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY()) <= range) { // 적군이 사거리 안으로 들어왔을때
 				if(timeCount >= shootSpeed) {
 					player.addBullets(new Bullet(bulletId, x, y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY() + (int)(enemy.getUnits().get(0).getHeight()*0.3), damage, bulletSpeed));
+					timeCount = 0;
+				} else {
+					timeCount++;
+				}
+			} else {
+				timeCount = 0;
+			}
+		} else { // 적군 터렛
+			if(player.getUnits().size() == 0) return;
+			
+			if(dist(x, y, player.getUnits().get(0).getX(), player.getUnits().get(0).getY()) <= range) { // 적군이 사거리 안으로 들어왔을때
+				if(timeCount >= shootSpeed) {
+					enemy.addBullets(new Bullet(bulletId, x, y, player.getUnits().get(0).getX(), player.getUnits().get(0).getY() + (int)(player.getUnits().get(0).getHeight()*0.3), damage, bulletSpeed));
 					timeCount = 0;
 				} else {
 					timeCount++;

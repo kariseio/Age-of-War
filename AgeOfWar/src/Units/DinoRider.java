@@ -6,9 +6,9 @@ import Player.Player;
 
 public class DinoRider extends Unit {
 	public DinoRider(boolean isEnemy) {
-		maxHealth = 200;
-		health = 200;
-		power = 20;
+		maxHealth = 160;
+		health = 160;
+		power = 40;
 		range = 10;
 		speed = 1;
 		

@@ -23,7 +23,7 @@ public class Player {
 	
 	private ArrayList<Unit> units;
 	private Turret[] turrets;
-	private boolean[] hasTurret;
+	public boolean[] hasTurret;
 	private ArrayList<Bullet> bullets;
 	
 	public Player(boolean isEnemy) {
@@ -35,8 +35,8 @@ public class Player {
 		maxHealth = 50000;
 		health = 50000;
 		gold = 150;
-		exp = 1;
-		turretSpace = 4;
+		exp = 0;
+		turretSpace = 1;
 		tech = 1;
 		
 		this.isEnemy = isEnemy;
@@ -62,19 +62,21 @@ public class Player {
 	public void addTurrets(int index, String turret, boolean isEnemy) {
 		switch(turret) {
 		case "RockSlingshot":
-			turrets[index] = new RockSlingshot(index, false);
+			turrets[index] = new RockSlingshot(index, isEnemy);
 			break;
 		case "EggAutomatic":
-			turrets[index] = new EggAutomatic(index, false);
+			turrets[index] = new EggAutomatic(index, isEnemy);
 			break;
 		case "PrimitiveCatapult":
-			turrets[index] = new PrimitiveCatapult(index, false);
+			turrets[index] = new PrimitiveCatapult(index, isEnemy);
 			break;
 		}
+		
+		updateGold(-turrets[index].getPrice());
 		hasTurret[index] = true;
 	}
 	public void sellTurret(int index) { // 터렛 판매
-		updateGold((int)(turrets[index].getPrice()*0.7)); // 판매시 0.7만큼 돌려줌
+		updateGold((int)(turrets[index].getPrice()*0.5)); // 판매시 0.5만큼 돌려줌
 		turrets[index] = null; // 할당 해제하고
 		hasTurret[index] = false; // 터렛 없음으로 변경
 	}
@@ -115,6 +117,10 @@ public class Player {
 	public void hit(int power) {
 		if(health > 0)
 			health -= power;
+	}
+	public void techUp() {
+		tech++;
+		baseImg = new ImageIcon("src/Images/base"+tech+".png");
 	}
 	
 	public void buildTurretSpace() {

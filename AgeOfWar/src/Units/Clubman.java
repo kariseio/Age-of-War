@@ -6,9 +6,9 @@ import Player.Player;
 
 public class Clubman extends Unit {
 	public Clubman(boolean isEnemy) {
-		maxHealth = 100;
-		health = 100;
-		power = 10;
+		maxHealth = 55;
+		health = 55;
+		power = 16;
 		range = 10;
 		speed = 1;
 		

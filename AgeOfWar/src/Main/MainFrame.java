@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
 		homePanel = new HomePanel(this);
 		add(homePanel);
 		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
