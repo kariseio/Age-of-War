@@ -49,11 +49,20 @@ public class GamePanel extends JPanel implements Runnable {
 	private int queueCount;
 	private String selectedTurret;
 	
+	private String[] turret_types = new String[] {"RockSlingshot", "EggAutomatic", "PrimitiveCatapult"};
+	private String[] unit_types = new String[] {"Clubman", "Slingshotman", "DinoRider" };
+	private int unit_type;
+	
+	private int timer = 0;
+	private int tech_timer = 0;
+	private int unit_level = 1;
+	
 	Thread th; // 쓰레드
 	Image bufImage; // 더블버퍼링용
 	Graphics buffer;
 	
 	private InfoPanel infoPanel;
+	private SpecialPanel specialPanel;
 	private SelectPanel selectPanel;
 	
 	private Image background = new ImageIcon("src/Images/background.png").getImage();
@@ -76,6 +85,10 @@ public class GamePanel extends JPanel implements Runnable {
 		infoPanel = new InfoPanel();
 		infoPanel.setBounds(0, 0, 200, 100);
 		add(infoPanel);
+		
+		specialPanel = new SpecialPanel();
+		specialPanel.setBounds(850, 100, 150, 40);
+		add(specialPanel);
 		
 		selectPanel = new SelectPanel();
 		selectPanel.setBounds(634, 0, 350, 100);
@@ -226,6 +239,40 @@ public class GamePanel extends JPanel implements Runnable {
 		public void update(int gold, int exp) {
 			goldLabel.setText("" + gold);
 			expLabel.setText("Exp : " + exp);
+		}
+	}
+	
+	private class SpecialPanel extends JPanel {
+		private JLabel label;
+		private JButton special;
+		
+		public SpecialPanel() {
+			setLayout(null);
+			
+			label = new JLabel("Special");
+			label.setForeground(Color.YELLOW);
+			label.setFont(new Font("Serif", Font.PLAIN, 15));
+			label.setBounds(10, 0, 50, 30);
+			add(label);
+			
+			special = new JButton(new ImageIcon("src/Images/special1.png"));
+			special.setBounds(40, 3, 100, 30);
+			special.setBorderPainted(false);
+			special.setContentAreaFilled(false);
+			special.setFocusPainted(false);
+			special.addActionListener(e -> {
+				if(player.getTech() == 1) {
+					for(int i = 0; i < 10; i++) {
+						player.addBullets(new Bullet(100 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 500 + 200), (int)(Math.random() * 750 + 100), 500, 250, 2));
+					}
+				}
+			});
+			add(special);
+		}
+		
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(new ImageIcon("src/Images/SpecialPanelImg.png").getImage(), 0, 0, null);
 		}
 	}
 	
@@ -459,6 +506,7 @@ public class GamePanel extends JPanel implements Runnable {
 			sellTurret.setVisible(true);
 			upgrade.setVisible(true);
 			hideAll();
+			menuLabel.setText("Menu");
 		}
 		
 		public void menuOff() {
@@ -486,6 +534,7 @@ public class GamePanel extends JPanel implements Runnable {
 				slingshotman.setVisible(true);
 				dinoRider.setVisible(true);
 			}
+			menuLabel.setText("Unit");
 		}
 		
 		public void showTurrets() { // 구매할 수 있는 터렛 보여줌
@@ -494,6 +543,7 @@ public class GamePanel extends JPanel implements Runnable {
 				eggAutomatic.setVisible(true);
 				primitiveCatapult.setVisible(true);
 			}
+			menuLabel.setText("Turret");
 		}
 		
 		public void showTurretSpace() { // 터렛 공간 보여줌
@@ -522,6 +572,7 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 			hideAll();
 			cancelButton.setVisible(true);
+			menuLabel.setText("Sell");
 		}
 		
 		public void paintComponent(Graphics g) {
@@ -685,8 +736,43 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void enemyAction() { // 적 행동
-		if(Math.random()*1000 < 5) {
-			enemy_Character.add(new Clubman(true));
+		// 적군 테크 업
+		tech_timer++;
+		if(unit_level == 1) {
+			if(tech_timer == 1500) {
+				unit_level++;
+			}
+		} else if(unit_level == 2) {
+			if(tech_timer == 5000) {
+				unit_level++;
+			}
+		}
+		
+		
+		// 적군 터렛 설치
+		if(enemy.getTech() == 1) {
+			if(tech_timer == 1000) {
+				enemy.addTurrets(0, "RockSlingshot", true);
+			} else if(tech_timer == 4000) {
+				enemy.sellTurret(0);
+				enemy.addTurrets(0, "EggAutomatic", true);
+			} else if(tech_timer == 6000) {
+				enemy.sellTurret(0);
+				enemy.addTurrets(0, "PrimitiveCatapult", true);
+			}
+		}
+		
+		// 적군 유닛 생산
+		timer++;
+		if(timer == 60) {
+			if(Math.random() < 0.3) {
+				if(enemy_Character.size() < 6) {
+					unit_type = (int)(Math.random() * unit_level + 1);
+					unit_type = unit_type + (enemy.getTech() - 1) * 3;
+					enemy.addEUnits(unit_types[unit_type]);
+				}
+			}
+			timer = 0;
 		}
 		
 		// 체력 0

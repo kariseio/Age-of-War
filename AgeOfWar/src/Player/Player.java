@@ -9,6 +9,9 @@ import Turret.EggAutomatic;
 import Turret.PrimitiveCatapult;
 import Turret.RockSlingshot;
 import Turret.Turret;
+import Units.Clubman;
+import Units.DinoRider;
+import Units.Slingshotman;
 import Units.Unit;
 
 public class Player {
@@ -55,6 +58,19 @@ public class Player {
 	}
 	public void addUnits(Unit unit) {
 		units.add(unit);
+	}
+	public void addEUnits(String unit) {
+		switch(unit) {
+		case "Clubman":
+			units.add(new Clubman(true));
+			break;
+		case "Slingshotman":
+			units.add(new Slingshotman(true));
+			break;
+		case "DinoRider":
+			units.add(new DinoRider(true));
+			break;
+		}
 	}
 	public Turret[] getTurrets() {
 		return turrets;
