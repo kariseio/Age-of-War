@@ -4,23 +4,23 @@ import javax.swing.ImageIcon;
 
 import Player.Player;
 
-public class Knight extends Unit {
-	public Knight(boolean isEnemy) {
-		maxHealth = 300;
-		health = 300;
-		power = 60;
+public class Dueler extends Unit {
+	public Dueler(boolean isEnemy) {
+		maxHealth = 200;
+		health = 200;
+		power = 79;
 		range_power = 0;
-		range_melee = 60;
+		range_melee = 25;
 		range_shoot = 0;
 		speed = 1;
-		attackTime = 90;
+		attackTime = 50;
 		
-		image = new ImageIcon("src/Images/Knight.png");
+		image = new ImageIcon("src/Images/Dueler.png");
 		
 		width = image.getIconWidth();
 		height = image.getIconHeight();
 		
-		price = 500;
+		price = 200;
 		queueTime = 100;
 		
 		this.isEnemy = isEnemy;
@@ -28,11 +28,11 @@ public class Knight extends Unit {
 		if(isEnemy == false) {
 			x = 100;
 			y = 450 - height;
-			image = new ImageIcon("src/Images/Knight.png");
+			image = new ImageIcon("src/Images/Dueler.png");
 		} else {
 			x = 870 - width;
 			y = 450 - height;
-			image = new ImageIcon("src/Images/Knight_enemy.png");
+			image = new ImageIcon("src/Images/Dueler_enemy.png");
 		}
 	}
 }

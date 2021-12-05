@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import Player.Player;
 
 public class Unit {
-	private final int attackTime = 40; // 40프레임 후에 공격 (공격 카운트)
+	protected int attackTime = 60; // 60프레임 후에 공격 (공격 카운트)
 	
 	protected int maxHealth;
 	protected int health;

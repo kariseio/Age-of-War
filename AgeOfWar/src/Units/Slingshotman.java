@@ -11,6 +11,7 @@ public class Slingshotman extends Unit {
 		range_melee = 20;
 		range_shoot = 100;
 		speed = 1;
+		attackTime = 60;
 		
 		image = new ImageIcon("src/Images/Slingshotman.png");
 		

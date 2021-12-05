@@ -13,6 +13,7 @@ public class Clubman extends Unit {
 		range_melee = 20;
 		range_shoot = 0;
 		speed = 1;
+		attackTime = 60;
 		
 		image = new ImageIcon("src/Images/Clubman.png");
 		

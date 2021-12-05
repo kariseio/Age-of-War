@@ -9,15 +9,21 @@ import javax.swing.ImageIcon;
 import Turret.Bullet;
 import Turret.Catapult;
 import Turret.EggAutomatic;
+import Turret.ExplosivesCannon;
 import Turret.FireCatapult;
+import Turret.LargeCannon;
 import Turret.Oil;
 import Turret.PrimitiveCatapult;
 import Turret.RockSlingshot;
+import Turret.SmallCannon;
 import Turret.Turret;
 import Units.Archer;
+import Units.Cannoner;
 import Units.Clubman;
 import Units.DinoRider;
+import Units.Dueler;
 import Units.Knight;
+import Units.Mousquettere;
 import Units.Slingshotman;
 import Units.Swordman;
 import Units.Unit;
@@ -46,10 +52,10 @@ public class Player {
 		
 		maxHealth = 50000;
 		health = 50000;
-		gold = 150;
+		gold = 1500000;
 		exp = 100000;
-		turretSpace = 1;
-		tech = 1;
+		turretSpace = 4;
+		tech = 3;
 		
 		this.isEnemy = isEnemy;
 		
@@ -88,6 +94,15 @@ public class Player {
 		case "Knight":
 			queue.add(new Knight(false));
 			break;
+		case "Dueler":
+			queue.add(new Dueler(false));
+			break;
+		case "Mousquettere":
+			queue.add(new Mousquettere(false));
+			break;
+		case "Cannoner":
+			queue.add(new Cannoner(false));
+			break;
 		}
 	}
 	public void addEUnits(String unit) {
@@ -109,6 +124,15 @@ public class Player {
 			break;
 		case "Knight":
 			units.add(new Knight(true));
+			break;
+		case "Dueler":
+			units.add(new Dueler(true));
+			break;
+		case "Mousquettere":
+			units.add(new Mousquettere(true));
+			break;
+		case "Cannoner":
+			units.add(new Cannoner(true));
 			break;
 		}
 	}
@@ -135,13 +159,22 @@ public class Player {
 		case "Oil":
 			turrets[index] = new Oil(index, isEnemy);
 			break;
+		case "SmallCannon":
+			turrets[index] = new SmallCannon(index, isEnemy);
+			break;
+		case "LargeCannon":
+			turrets[index] = new LargeCannon(index, isEnemy);
+			break;
+		case "ExplosivesCannon":
+			turrets[index] = new ExplosivesCannon(index, isEnemy);
+			break;
 		}
 		
 		updateGold(-turrets[index].getPrice());
 		hasTurret[index] = true;
 	}
 	public void sellTurret(int index) { // 터렛 판매
-		updateGold((int)(turrets[index].getPrice()*0.5)); // 판매시 0.5만큼 돌려줌
+		updateGold((int)Math.round(turrets[index].getPrice()*0.5)); // 판매시 0.5만큼 돌려줌
 		turrets[index] = null; // 할당 해제하고
 		hasTurret[index] = false; // 터렛 없음으로 변경
 	}
@@ -178,7 +211,7 @@ public class Player {
 	public ImageIcon getBaseImg() {
 		return baseImg;
 	}
-	public Queue getQueue() {
+	public Queue<Unit> getQueue() {
 		return queue;
 	}
 	

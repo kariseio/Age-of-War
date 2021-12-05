@@ -13,6 +13,7 @@ public class Archer extends Unit {
 		range_melee = 20;
 		range_shoot = 130;
 		speed = 1;
+		attackTime = 60;
 		
 		image = new ImageIcon("src/Images/Archer.png");
 		

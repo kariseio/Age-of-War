@@ -13,6 +13,7 @@ public class DinoRider extends Unit {
 		range_melee = 45;
 		range_shoot = 0;
 		speed = 1;
+		attackTime = 90;
 		
 		image = new ImageIcon("src/Images/DinoRider.png");
 		
