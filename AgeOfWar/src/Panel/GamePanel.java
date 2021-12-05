@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.sun.source.doctree.UnknownInlineTagTree;
+
 import Main.MainFrame;
 import Player.Player;
 import Turret.Bullet;
@@ -39,6 +41,8 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private JLabel playerHealth; // 플레이어 체력 수치
 	private JLabel enemyHealth; // 적 체력 수치
+	
+	private int special3 = 0;
 	
 	private JButton[] tSpace; // 터렛 공간
 	private JButton[] sellTS;
@@ -281,6 +285,8 @@ public class GamePanel extends JPanel implements Runnable {
 					for(int i = 0; i < 15; i++) {
 						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 150, 3));
 					}
+				} else if(player.getTech() == 3) {
+					special3 = 1500;
 				}
 			});
 			add(special);
@@ -680,7 +686,8 @@ public class GamePanel extends JPanel implements Runnable {
 		for(int i = 0; i < player_Character.size(); i++) {
 			Unit unit = player_Character.get(i);
 			buffer.drawImage(unit.getImage(), unit.getX(), unit.getY(), null);
-			
+			if(special3 > 0) // 체력이 차는 노란색 이펙트 (스페셜 3)
+				buffer.drawImage(new ImageIcon("src/Images/special3_effect.png").getImage(), unit.getX(), 500 - unit.getHeight(), null);
 			// 체력 바
 			if(unit.getHealth() < unit.getMaxHealth()) {
 				buffer.setColor(Color.RED);
@@ -742,6 +749,10 @@ public class GamePanel extends JPanel implements Runnable {
 		for(int i = 0; i < player_Character.size(); i++) {
 			Unit unit = player_Character.get(i);
 			unit.action(player, enemy, i);
+			if(special3 > 0) {
+				unit.hpUp();
+				special3--;
+			}
 			
 			if(unit.getHealth() <= 0) { // 삭제되는 조건 (체력0) 
 				int reward = (int) Math.round(unit.getPrice() * 1.3);

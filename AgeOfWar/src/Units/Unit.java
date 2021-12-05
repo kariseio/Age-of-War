@@ -174,4 +174,10 @@ public class Unit {
 	public void hit(int dmg) {
 		health -= dmg;
 	}
+	
+	public void hpUp() {
+		health += 1;
+		if(health > maxHealth)
+			health = maxHealth;
+	}
 }
