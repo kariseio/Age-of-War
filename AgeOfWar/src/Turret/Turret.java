@@ -16,7 +16,7 @@ public class Turret {
 	
 	protected boolean isEnemy;
 	
-	protected int timeCount;
+	protected int timeCount = 0;
 	protected ImageIcon img;
 	
 	public Turret() {
@@ -41,7 +41,7 @@ public class Turret {
 			
 			if(dist(x, y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY()) <= range) { // 적군이 사거리 안으로 들어왔을때
 				if(timeCount >= shootSpeed) {
-					player.addBullets(new Bullet(bulletId, x, y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY() + (int)(enemy.getUnits().get(0).getHeight()*0.3), damage, bulletSpeed));
+					player.addBullets(new Bullet(bulletId, x, y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY() + (int)(enemy.getUnits().get(0).getHeight()*0.2), damage, bulletSpeed));
 					timeCount = 0;
 				} else {
 					timeCount++;
@@ -51,10 +51,10 @@ public class Turret {
 			}
 		} else { // 적군 터렛
 			if(player.getUnits().size() == 0) return;
-			
-			if(dist(x, y, player.getUnits().get(0).getX(), player.getUnits().get(0).getY()) <= range) { // 적군이 사거리 안으로 들어왔을때
+			System.out.println("혹시 여기?");
+			if(dist(x, y, player.getUnits().get(0).getX() + player.getUnits().get(0).getWidth(), player.getUnits().get(0).getY()) <= range) { // 적군이 사거리 안으로 들어왔을때
 				if(timeCount >= shootSpeed) {
-					enemy.addBullets(new Bullet(bulletId, x, y, player.getUnits().get(0).getX(), player.getUnits().get(0).getY() + (int)(player.getUnits().get(0).getHeight()*0.3), damage, bulletSpeed));
+					enemy.addBullets(new Bullet(bulletId, x, y, player.getUnits().get(0).getX() + player.getUnits().get(0).getWidth(), player.getUnits().get(0).getY() + (int)(player.getUnits().get(0).getHeight()*0.2), damage, bulletSpeed));
 					timeCount = 0;
 				} else {
 					timeCount++;
@@ -65,8 +65,11 @@ public class Turret {
 		}
 	}
 	
+	public double dist(int x, int x2) {
+		return Math.abs(x2 - x);
+	}
+	
 	public double dist(int x, int y, int x2, int y2) {
-//		System.out.println(x + " " + y + " " + " " + x2 + " " + y2);
 		return Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
 	}
 }

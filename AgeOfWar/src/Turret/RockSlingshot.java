@@ -12,9 +12,16 @@ public class RockSlingshot extends Turret {
 		price = 100;
 		
 		this.isEnemy = isEnemy;
-		x = isEnemy ? 920 : 25;
-		y = 350 - 40 * index;
 		
-		img = new ImageIcon("src/Images/RockSlingshot.png");
+		if(isEnemy == false) {
+			x = 25;
+			y = 350 - 40 * index;
+			img = new ImageIcon("src/Images/RockSlingshot.png");
+		} else {
+			x = 920;
+			y = 350 - 40 * index;
+			img = new ImageIcon("src/Images/RockSlingshot_enemy.png");
+		}
+		
 	}
 }

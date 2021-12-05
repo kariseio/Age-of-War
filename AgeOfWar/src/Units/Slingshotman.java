@@ -6,8 +6,10 @@ public class Slingshotman extends Unit {
 	public Slingshotman(boolean isEnemy) {
 		maxHealth = 42;
 		health = 42;
-		power = 8;
-		range = 100;
+		power = 10;
+		range_power = 8;
+		range_melee = 20;
+		range_shoot = 100;
 		speed = 1;
 		
 		image = new ImageIcon("src/Images/Slingshotman.png");
@@ -16,6 +18,7 @@ public class Slingshotman extends Unit {
 		height = image.getIconHeight();
 		
 		price = 25;
+		queueTime = 40;
 		
 		this.isEnemy = isEnemy;
 		

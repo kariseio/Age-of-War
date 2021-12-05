@@ -9,7 +9,9 @@ public class DinoRider extends Unit {
 		maxHealth = 160;
 		health = 160;
 		power = 40;
-		range = 10;
+		range_power = 0;
+		range_melee = 45;
+		range_shoot = 0;
 		speed = 1;
 		
 		image = new ImageIcon("src/Images/DinoRider.png");
@@ -18,6 +20,7 @@ public class DinoRider extends Unit {
 		height = image.getIconHeight();
 		
 		price = 100;
+		queueTime = 100;
 		
 		this.isEnemy = isEnemy;
 		
@@ -28,7 +31,7 @@ public class DinoRider extends Unit {
 		} else {
 			x = 870 - width;
 			y = 450 - height;
-			image = new ImageIcon("src/Images/DinoRider.png");
+			image = new ImageIcon("src/Images/DinoRider_enemy.png");
 		}
 		
 		

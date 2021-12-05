@@ -9,7 +9,9 @@ public class Clubman extends Unit {
 		maxHealth = 55;
 		health = 55;
 		power = 16;
-		range = 10;
+		range_power = 0;
+		range_melee = 20;
+		range_shoot = 0;
 		speed = 1;
 		
 		image = new ImageIcon("src/Images/Clubman.png");
@@ -18,6 +20,7 @@ public class Clubman extends Unit {
 		height = image.getIconHeight();
 		
 		price = 15;
+		queueTime = 40;
 		
 		this.isEnemy = isEnemy;
 		

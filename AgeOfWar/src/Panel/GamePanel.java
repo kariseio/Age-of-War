@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,11 +16,13 @@ import javax.swing.JPanel;
 import Main.MainFrame;
 import Player.Player;
 import Turret.Bullet;
-import Turret.RockSlingshot;
 import Turret.Turret;
+import Units.Archer;
 import Units.Clubman;
 import Units.DinoRider;
+import Units.Knight;
 import Units.Slingshotman;
+import Units.Swordman;
 import Units.Unit;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -46,11 +46,15 @@ public class GamePanel extends JPanel implements Runnable {
 	private JButton xSpeed;
 	private int gameSpeed = 1;
 	
-	private int queueCount;
+	Unit queueUnit = null; // 큐에서 꺼낸 유닛
+	boolean isQueue = false; // 큐에서 유닛 꺼냈는지
+	private final int maxQueue = 4; // 큐 최대 4 => 5개까지임 (하나는 꺼내서 쓰고 있으니까)
+	private int queueCount; // 큐 진행 시간
+	
 	private String selectedTurret;
 	
-	private String[] turret_types = new String[] {"RockSlingshot", "EggAutomatic", "PrimitiveCatapult"};
-	private String[] unit_types = new String[] {"Clubman", "Slingshotman", "DinoRider" };
+//	private String[] turret_types = new String[] {"", "RockSlingshot", "EggAutomatic", "PrimitiveCatapult"};
+	private String[] unit_types = new String[] {"", "Clubman", "Slingshotman", "DinoRider", "Swordman", "Archer", "Knight"};
 	private int unit_type;
 	
 	private int timer = 0;
@@ -182,10 +186,16 @@ public class GamePanel extends JPanel implements Runnable {
 			enemyAction();
 			
 			// queue action
-			if(!queue.isEmpty()) {
-				if(queueCount == 50) {
-					player.addUnits(queue.poll());
+			if(!queue.isEmpty() || isQueue == true) {
+				if(isQueue == false) {
+					queueUnit = queue.poll();
+					isQueue = true;
+				}
+				
+				if(queueCount == queueUnit.getQueueTime()) {
+					player.addUnits(queueUnit);
 					queueCount = 0;
+					isQueue = false;
 				} else {
 					queueCount++;
 				}
@@ -255,15 +265,19 @@ public class GamePanel extends JPanel implements Runnable {
 			label.setBounds(10, 0, 50, 30);
 			add(label);
 			
-			special = new JButton(new ImageIcon("src/Images/special1.png"));
+			special = new JButton(new ImageIcon("src/Images/special" + player.getTech() + ".png"));
 			special.setBounds(40, 3, 100, 30);
 			special.setBorderPainted(false);
 			special.setContentAreaFilled(false);
 			special.setFocusPainted(false);
 			special.addActionListener(e -> {
-				if(player.getTech() == 1) {
-					for(int i = 0; i < 10; i++) {
-						player.addBullets(new Bullet(100 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 500 + 200), (int)(Math.random() * 750 + 100), 500, 250, 2));
+				if(player.getTech() == 1) { // 스페셜 1
+					for(int i = 0; i < 15; i++) {
+						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 100, 2));
+					}
+				} else if(player.getTech() == 2) { // 스페셜 2
+					for(int i = 0; i < 15; i++) {
+						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 150, 3));
 					}
 				}
 			});
@@ -277,20 +291,27 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	
 	private class SelectPanel extends JPanel {
+		// Menu
 		private JButton buyUnit;
 		private JButton buyTurret;
 		private JButton buyTurretSpace;
 		private JButton sellTurret;
 		private JButton upgrade;
 		private JButton back;
-		
+		// Unit
 		private JButton clubman;
 		private JButton slingshotman;
 		private JButton dinoRider;
-		
+		private JButton swordman;
+		private JButton archer;
+		private JButton knight;
+		// Turret
 		private JButton rockSlingshot;
 		private JButton eggAutomatic;
 		private JButton primitiveCatapult;
+		private JButton catapult;
+		private JButton fireCatapult;
+		private JButton oil;
 		
 		private JButton cancelButton;
 		
@@ -402,7 +423,7 @@ public class GamePanel extends JPanel implements Runnable {
 			clubman.setBounds(30, 40, 40, 40);
 			clubman.addActionListener(e -> {
 					Clubman unit = new Clubman(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < 5) {
+					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
 						player.updateGold(-unit.getPrice());
 						queue.add(unit);
 					}
@@ -417,7 +438,7 @@ public class GamePanel extends JPanel implements Runnable {
 			slingshotman.setBounds(85, 40, 40, 40);
 			slingshotman.addActionListener(e -> {
 					Slingshotman unit = new Slingshotman(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < 5) {
+					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
 						player.updateGold(-unit.getPrice());
 						queue.add(unit);
 					}
@@ -432,7 +453,7 @@ public class GamePanel extends JPanel implements Runnable {
 			dinoRider.setBounds(140, 40, 40, 40);
 			dinoRider.addActionListener(e -> {
 					DinoRider unit = new DinoRider(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < 5) {
+					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
 						player.updateGold(-unit.getPrice());
 						queue.add(unit);
 					}
@@ -440,6 +461,51 @@ public class GamePanel extends JPanel implements Runnable {
 			);
 			dinoRider.setVisible(false);
 			add(dinoRider);
+			
+			swordman = new JButton(new ImageIcon("src/Images/Swordman_Button.png"));
+			swordman.setContentAreaFilled(false);
+			swordman.setFocusPainted(false);
+			swordman.setBounds(30, 40, 40, 40);
+			swordman.addActionListener(e -> {
+					Swordman unit = new Swordman(false);
+					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
+						player.updateGold(-unit.getPrice());
+						queue.add(unit);
+					}
+				}
+			);
+			swordman.setVisible(false);
+			add(swordman);
+			
+			archer = new JButton(new ImageIcon("src/Images/Archer_Button.png"));
+			archer.setContentAreaFilled(false);
+			archer.setFocusPainted(false);
+			archer.setBounds(85, 40, 40, 40);
+			archer.addActionListener(e -> {
+					Archer unit = new Archer(false);
+					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
+						player.updateGold(-unit.getPrice());
+						queue.add(unit);
+					}
+				}
+			);
+			archer.setVisible(false);
+			add(archer);
+			
+			knight = new JButton(new ImageIcon("src/Images/Knight_Button.png"));
+			knight.setContentAreaFilled(false);
+			knight.setFocusPainted(false);
+			knight.setBounds(140, 40, 40, 40);
+			knight.addActionListener(e -> {
+					Knight unit = new Knight(false);
+					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
+						player.updateGold(-unit.getPrice());
+						queue.add(unit);
+					}
+				}
+			);
+			knight.setVisible(false);
+			add(knight);
 			
 			
 			// Turrets
@@ -485,6 +551,49 @@ public class GamePanel extends JPanel implements Runnable {
 			primitiveCatapult.setVisible(false);
 			add(primitiveCatapult);
 			
+			catapult = new JButton(new ImageIcon("src/Images/Catapult_Button.png"));
+			catapult.setContentAreaFilled(false);
+			catapult.setFocusPainted(false);
+			catapult.setBounds(30, 40, 40, 40);
+			catapult.addActionListener(e -> {
+				if(player.getGold() < 500) return; // 500원
+				
+				showTurretSpace();
+				selectedTurret = "Catapult";
+				}
+			);
+			catapult.setVisible(false);
+			add(catapult);
+			
+			fireCatapult = new JButton(new ImageIcon("src/Images/FireCatapult_Button.png"));
+			fireCatapult.setContentAreaFilled(false);
+			fireCatapult.setFocusPainted(false);
+			fireCatapult.setBounds(85, 40, 40, 40);
+			fireCatapult.addActionListener(e -> {
+				if(player.getGold() < 750) return; // 750원
+				
+				showTurretSpace();
+				selectedTurret = "FireCatapult";
+				}
+			);
+			fireCatapult.setVisible(false);
+			add(fireCatapult);
+			
+			oil = new JButton(new ImageIcon("src/Images/Oil_Button.png"));
+			oil.setContentAreaFilled(false);
+			oil.setFocusPainted(false);
+			oil.setBounds(140, 40, 40, 40);
+			oil.addActionListener(e -> {
+				if(player.getGold() < 1000) return; // 1000원
+				
+				showTurretSpace();
+				selectedTurret = "Oil";
+				}
+			);
+			oil.setVisible(false);
+			add(oil);
+			
+			
 			cancelButton = new JButton(new ImageIcon("src/Images/cancel.png"));
 			cancelButton.setContentAreaFilled(false);
 			cancelButton.setFocusPainted(false);
@@ -520,12 +629,21 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		public void hideAll() { // 다 숨기기
 			back.setVisible(false);
+			// unit
 			clubman.setVisible(false);
 			slingshotman.setVisible(false);
 			dinoRider.setVisible(false);
+			swordman.setVisible(false);
+			archer.setVisible(false);
+			knight.setVisible(false);
+			// turret
 			rockSlingshot.setVisible(false);
 			eggAutomatic.setVisible(false);
 			primitiveCatapult.setVisible(false);
+			catapult.setVisible(false);
+			fireCatapult.setVisible(false);
+			oil.setVisible(false);
+			
 		}
 		
 		public void showUnits() { // 구매할 수 있는 유닛 보여줌
@@ -533,6 +651,10 @@ public class GamePanel extends JPanel implements Runnable {
 				clubman.setVisible(true);
 				slingshotman.setVisible(true);
 				dinoRider.setVisible(true);
+			} else if(player.getTech() == 2) {
+				swordman.setVisible(true);
+				archer.setVisible(true);
+				knight.setVisible(true);
 			}
 			menuLabel.setText("Unit");
 		}
@@ -542,6 +664,10 @@ public class GamePanel extends JPanel implements Runnable {
 				rockSlingshot.setVisible(true);
 				eggAutomatic.setVisible(true);
 				primitiveCatapult.setVisible(true);
+			} else if(player.getTech() == 2) {
+				catapult.setVisible(true);
+				fireCatapult.setVisible(true);
+				oil.setVisible(true);
 			}
 			menuLabel.setText("Turret");
 		}
@@ -600,9 +726,11 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		buffer.setColor(Color.RED);
 		if(queueCount != 0)
-			buffer.fillRect(220, 10, 400/50 * queueCount, 15);
+			buffer.fillRect(220, 10, 400/queueUnit.getQueueTime() * queueCount, 15);
+		if(isQueue == true)
+			buffer.fillRect(220, 35, 15, 15);
 		for(int i = 0; i < queue.size(); i++) {
-			buffer.fillRect(220+20*i, 35, 15, 15);
+			buffer.fillRect(240+20*i, 35, 15, 15);
 		}
 		
 		// 아군 터렛 공간 그리기
@@ -728,6 +856,9 @@ public class GamePanel extends JPanel implements Runnable {
 			
 			for(int j = 0; j < enemy_Character.size(); j++) { // 피격 체크
 				if(isHit(bullet.getX(), bullet.getY(), enemy_Character.get(j))) {
+					if(bullet.getBulletId() == 4) { // 갈라지는 탄
+						bullet.particle(player, enemy_Character.get(j)); // 갈라진 탄환 생성
+					}
 					enemy_Character.get(j).hit(bullet.getDamage());
 					player_Bullet.remove(i);
 				}
@@ -747,7 +878,14 @@ public class GamePanel extends JPanel implements Runnable {
 				unit_level++;
 			}
 		}
-		
+		if(tech_timer == 8000) {
+			if(enemy.getTech() != 5) {
+				enemy.techUp();
+				
+				unit_level = 0;
+				tech_timer = 0;
+			}
+		}
 		
 		// 적군 터렛 설치
 		if(enemy.getTech() == 1) {
@@ -760,13 +898,25 @@ public class GamePanel extends JPanel implements Runnable {
 				enemy.sellTurret(0);
 				enemy.addTurrets(0, "PrimitiveCatapult", true);
 			}
+		} else if(enemy.getTech() == 2) {
+//			if(tech_timer == 1000) {
+////				enemy.sellTurret(0);
+//				enemy.addTurrets(0, "Catapult", true);
+//			} else if(tech_timer == 4000) {
+//				enemy.buildTurretSpace();
+//				enemy.sellTurret(0);
+//				enemy.addTurrets(0, "Oil", true);
+//			} else if(tech_timer == 6000) {
+//				enemy.sellTurret(0);
+//				enemy.addTurrets(1, "FireCatapult", true);
+//			}
 		}
 		
 		// 적군 유닛 생산
 		timer++;
 		if(timer == 60) {
 			if(Math.random() < 0.3) {
-				if(enemy_Character.size() < 6) {
+				if(enemy_Character.size() < 8) { // 8마리까지 생성 제한
 					unit_type = (int)(Math.random() * unit_level + 1);
 					unit_type = unit_type + (enemy.getTech() - 1) * 3;
 					enemy.addEUnits(unit_types[unit_type]);
@@ -799,33 +949,23 @@ public class GamePanel extends JPanel implements Runnable {
 				enemy_Turrets[i].shoot(player, enemy);
 		}
 		
-		for(int i = 0; i < player_Bullet.size(); i++) { // 플레이어 bullet action
-			Bullet bullet = player_Bullet.get(i);
-			bullet.action();
-			
-			if(bullet.getY() > 450) // 바닥에 박힘
-				player_Bullet.remove(i);
-			
-			for(int j = 0; j < enemy_Character.size(); j++) { // 피격 체크
-				if(isHit(bullet.getX(), bullet.getY(), enemy_Character.get(j))) {
-					enemy_Character.get(j).hit(bullet.getDamage());
-					player_Bullet.remove(i);
-				}
-			}
-		}
-		
 		for(int i = 0; i < enemy_Bullet.size(); i++) { // 적군 bullet action
 			Bullet bullet = enemy_Bullet.get(i);
 			bullet.action();
+			System.out.println("123");
 			
 			if(bullet.getY() > 450) // 바닥에 박힘
 				enemy_Bullet.remove(i);
 			
 			for(int j = 0; j < player_Character.size(); j++) { // 피격 체크
 				if(isHit(bullet.getX(), bullet.getY(), player_Character.get(j))) {
+					if(bullet.getBulletId() == 4) { // 갈라지는 탄
+						bullet.particle(enemy, player_Character.get(j)); // 갈라진 탄환 생성
+					}
 					player_Character.get(j).hit(bullet.getDamage());
 					enemy_Bullet.remove(i);
 				}
+				
 			}
 		}
 	}

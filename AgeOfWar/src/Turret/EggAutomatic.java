@@ -12,9 +12,15 @@ public class EggAutomatic extends Turret {
 		price = 200;
 		
 		this.isEnemy = isEnemy;
-		x = isEnemy ? 920 : 25;
-		y = 350 - 40 * index;
 		
-		img = new ImageIcon("src/Images/EggAutomatic.png");
+		if(isEnemy == false) {
+			x = 25;
+			y = 350 - 40 * index;
+			img = new ImageIcon("src/Images/EggAutomatic.png");
+		} else {
+			x = 920;
+			y = 350 - 40 * index;
+			img = new ImageIcon("src/Images/EggAutomatic_enemy.png");
+		}
 	}
 }

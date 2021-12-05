@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import Turret.Bullet;
+import Turret.Catapult;
 import Turret.EggAutomatic;
+import Turret.FireCatapult;
+import Turret.Oil;
 import Turret.PrimitiveCatapult;
 import Turret.RockSlingshot;
 import Turret.Turret;
+import Units.Archer;
 import Units.Clubman;
 import Units.DinoRider;
+import Units.Knight;
 import Units.Slingshotman;
+import Units.Swordman;
 import Units.Unit;
 
 public class Player {
@@ -35,8 +41,8 @@ public class Player {
 		hasTurret = new boolean[4];
 		bullets = new ArrayList<>();
 		
-		maxHealth = 50000;
-		health = 50000;
+		maxHealth = 500;
+		health = 500;
 		gold = 150;
 		exp = 0;
 		turretSpace = 1;
@@ -70,6 +76,15 @@ public class Player {
 		case "DinoRider":
 			units.add(new DinoRider(true));
 			break;
+		case "Swordman":
+			units.add(new Swordman(true));
+			break;
+		case "Archer":
+			units.add(new Archer(true));
+			break;
+		case "Knight":
+			units.add(new Knight(true));
+			break;
 		}
 	}
 	public Turret[] getTurrets() {
@@ -85,6 +100,15 @@ public class Player {
 			break;
 		case "PrimitiveCatapult":
 			turrets[index] = new PrimitiveCatapult(index, isEnemy);
+			break;
+		case "Catapult":
+			turrets[index] = new Catapult(index, isEnemy);
+			break;
+		case "FireCatapult":
+			turrets[index] = new FireCatapult(index, isEnemy);
+			break;
+		case "Oil":
+			turrets[index] = new Oil(index, isEnemy);
 			break;
 		}
 		
@@ -136,6 +160,8 @@ public class Player {
 	}
 	public void techUp() {
 		tech++;
+		maxHealth += 300 * tech;
+		health += 300 * tech;
 		baseImg = new ImageIcon("src/Images/base"+tech+".png");
 	}
 	
