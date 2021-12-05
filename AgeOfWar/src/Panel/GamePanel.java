@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private Turret[] enemy_Turrets = enemy.getTurrets();
 	private ArrayList<Bullet> player_Bullet = player.getBullets(); // 플레이어 총알
 	private ArrayList<Bullet> enemy_Bullet = enemy.getBullets(); // 적 총알
-	private Queue<Unit> queue = new LinkedList<>(); // 유닛 뽑을 때 대기열
+	private Queue<Unit> queue = player.getQueue(); // 유닛 뽑을 때 대기열
 	
 	private JLabel playerHealth; // 플레이어 체력 수치
 	private JLabel enemyHealth; // 적 체력 수치
@@ -53,8 +53,10 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private String selectedTurret;
 	
-//	private String[] turret_types = new String[] {"", "RockSlingshot", "EggAutomatic", "PrimitiveCatapult"};
 	private String[] unit_types = new String[] {"", "Clubman", "Slingshotman", "DinoRider", "Swordman", "Archer", "Knight"};
+	private int[] unit_price = new int[] {0, 15, 25, 100, 50, 75, 500};
+	private String[] turret_types = new String[] {"", "RockSlingshot", "EggAutomatic", "PrimitiveCatapult", "Catapult", "FireCatapult", "Oil"};
+	private int[] turret_price = new int[] {0, 100, 200, 500, 500, 750, 1000};
 	private int unit_type;
 	
 	private int timer = 0;
@@ -284,6 +286,10 @@ public class GamePanel extends JPanel implements Runnable {
 			add(special);
 		}
 		
+		public void updateButtons() {
+			special.setIcon(new ImageIcon("src/Images/special" + player.getTech() + ".png"));
+		}
+		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(new ImageIcon("src/Images/SpecialPanelImg.png").getImage(), 0, 0, null);
@@ -298,20 +304,16 @@ public class GamePanel extends JPanel implements Runnable {
 		private JButton sellTurret;
 		private JButton upgrade;
 		private JButton back;
+		
 		// Unit
-		private JButton clubman;
-		private JButton slingshotman;
-		private JButton dinoRider;
-		private JButton swordman;
-		private JButton archer;
-		private JButton knight;
+		private JButton unit1;
+		private JButton unit2;
+		private JButton unit3;
+		
 		// Turret
-		private JButton rockSlingshot;
-		private JButton eggAutomatic;
-		private JButton primitiveCatapult;
-		private JButton catapult;
-		private JButton fireCatapult;
-		private JButton oil;
+		private JButton turret1;
+		private JButton turret2;
+		private JButton turret3;
 		
 		private JButton cancelButton;
 		
@@ -390,18 +392,22 @@ public class GamePanel extends JPanel implements Runnable {
 				if(player.getTech() == 1) {
 					if(player.getExp() >= 4000) {
 						player.techUp();
+						updateButtons();
 					}
 				} else if(player.getTech() == 2) {
 					if(player.getExp() >= 14000) {
 						player.techUp();
+						updateButtons();
 					}
 				} else if(player.getTech() == 3) {
 					if(player.getExp() >= 45000) {
 						player.techUp();
+						updateButtons();
 					}
 				} else if(player.getTech() == 4) {
 					if(player.getExp() >= 200000) {
 						player.techUp();
+						updateButtons();
 					}
 				}
 			});
@@ -417,182 +423,95 @@ public class GamePanel extends JPanel implements Runnable {
 			});
 			add(back);
 			
-			clubman = new JButton(new ImageIcon("src/Images/Clubman_Button.png"));
-			clubman.setContentAreaFilled(false);
-			clubman.setFocusPainted(false);
-			clubman.setBounds(30, 40, 40, 40);
-			clubman.addActionListener(e -> {
-					Clubman unit = new Clubman(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
-						player.updateGold(-unit.getPrice());
-						queue.add(unit);
-					}
-				}
-			);
-			clubman.setVisible(false);
-			add(clubman);
 			
-			slingshotman = new JButton(new ImageIcon("src/Images/Slingshotman_Button.png"));
-			slingshotman.setContentAreaFilled(false);
-			slingshotman.setFocusPainted(false);
-			slingshotman.setBounds(85, 40, 40, 40);
-			slingshotman.addActionListener(e -> {
-					Slingshotman unit = new Slingshotman(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
-						player.updateGold(-unit.getPrice());
-						queue.add(unit);
-					}
-				}
-			);
-			slingshotman.setVisible(false);
-			add(slingshotman);
+			// Units
+			unit1 = new JButton(new ImageIcon("src/Images/" + unit_types[(player.getTech() - 1) * 3 + 1] +"_Button.png"));
+			unit1.setContentAreaFilled(false);
+			unit1.setFocusPainted(false);
+			unit1.setBounds(30, 40, 40, 40);
+			unit1.addActionListener(e -> {
+				int price = unit_price[(player.getTech() - 1) * 3 + 1];
+				if(player.getGold() < price) return;
+				
+				player.addToQueue(unit_types[(player.getTech() - 1) * 3 + 1]);
+				player.updateGold(-price);
+			});
+			unit1.setVisible(false);
+			add(unit1);
 			
-			dinoRider = new JButton(new ImageIcon("src/Images/DinoRider_Button.png"));
-			dinoRider.setContentAreaFilled(false);
-			dinoRider.setFocusPainted(false);
-			dinoRider.setBounds(140, 40, 40, 40);
-			dinoRider.addActionListener(e -> {
-					DinoRider unit = new DinoRider(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
-						player.updateGold(-unit.getPrice());
-						queue.add(unit);
-					}
-				}
-			);
-			dinoRider.setVisible(false);
-			add(dinoRider);
+			unit2 = new JButton(new ImageIcon("src/Images/" + unit_types[(player.getTech() - 1) * 3 + 2] +"_Button.png"));
+			unit2.setContentAreaFilled(false);
+			unit2.setFocusPainted(false);
+			unit2.setBounds(85, 40, 40, 40);
+			unit2.addActionListener(e -> {
+				int price = unit_price[(player.getTech() - 1) * 3 + 2];
+				if(player.getGold() < price) return;
+				
+				player.addToQueue(unit_types[(player.getTech() - 1) * 3 + 2]);
+				player.updateGold(-price);
+			});
+			unit2.setVisible(false);
+			add(unit2);
 			
-			swordman = new JButton(new ImageIcon("src/Images/Swordman_Button.png"));
-			swordman.setContentAreaFilled(false);
-			swordman.setFocusPainted(false);
-			swordman.setBounds(30, 40, 40, 40);
-			swordman.addActionListener(e -> {
-					Swordman unit = new Swordman(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
-						player.updateGold(-unit.getPrice());
-						queue.add(unit);
-					}
-				}
-			);
-			swordman.setVisible(false);
-			add(swordman);
-			
-			archer = new JButton(new ImageIcon("src/Images/Archer_Button.png"));
-			archer.setContentAreaFilled(false);
-			archer.setFocusPainted(false);
-			archer.setBounds(85, 40, 40, 40);
-			archer.addActionListener(e -> {
-					Archer unit = new Archer(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
-						player.updateGold(-unit.getPrice());
-						queue.add(unit);
-					}
-				}
-			);
-			archer.setVisible(false);
-			add(archer);
-			
-			knight = new JButton(new ImageIcon("src/Images/Knight_Button.png"));
-			knight.setContentAreaFilled(false);
-			knight.setFocusPainted(false);
-			knight.setBounds(140, 40, 40, 40);
-			knight.addActionListener(e -> {
-					Knight unit = new Knight(false);
-					if(player.getGold() >= unit.getPrice() && queue.size() < maxQueue) {
-						player.updateGold(-unit.getPrice());
-						queue.add(unit);
-					}
-				}
-			);
-			knight.setVisible(false);
-			add(knight);
-			
+			unit3 = new JButton(new ImageIcon("src/Images/" + unit_types[(player.getTech() - 1) * 3 + 3] +"_Button.png"));
+			unit3.setContentAreaFilled(false);
+			unit3.setFocusPainted(false);
+			unit3.setBounds(140, 40, 40, 40);
+			unit3.addActionListener(e -> {
+				int price = unit_price[(player.getTech() - 1) * 3 + 3];
+				if(player.getGold() < price) return;
+				
+				player.addToQueue(unit_types[(player.getTech() - 1) * 3 + 3]);
+				player.updateGold(-price);
+			});
+			unit3.setVisible(false);
+			add(unit3);
 			
 			// Turrets
-			rockSlingshot = new JButton(new ImageIcon("src/Images/RockSlingshot_Button.png"));
-			rockSlingshot.setContentAreaFilled(false);
-			rockSlingshot.setFocusPainted(false);
-			rockSlingshot.setBounds(30, 40, 40, 40);
-			rockSlingshot.addActionListener(e -> {
-				if(player.getGold() < 100) return; // 100원
+			turret1 = new JButton(new ImageIcon("src/Images/" + turret_types[(player.getTech() - 1) * 3 + 1] + "_Button.png"));
+			turret1.setContentAreaFilled(false);
+			turret1.setFocusPainted(false);
+			turret1.setBounds(30, 40, 40, 40);
+			turret1.addActionListener(e -> {
+				int price = turret_price[(player.getTech() - 1) * 3 + 1];
+				if(player.getGold() < price) return;
 				
 				showTurretSpace();
-				selectedTurret = "RockSlingshot";
+				selectedTurret = turret_types[(player.getTech() - 1) * 3 + 1];
 				}
 			);
-			rockSlingshot.setVisible(false);
-			add(rockSlingshot);
+			turret1.setVisible(false);
+			add(turret1);
 			
-			eggAutomatic = new JButton(new ImageIcon("src/Images/EggAutomatic_Button.png"));
-			eggAutomatic.setContentAreaFilled(false);
-			eggAutomatic.setFocusPainted(false);
-			eggAutomatic.setBounds(85, 40, 40, 40);
-			eggAutomatic.addActionListener(e -> {
-				if(player.getGold() < 200) return; // 200원
+			turret2 = new JButton(new ImageIcon("src/Images/" + turret_types[(player.getTech() - 1) * 3 + 2] + "_Button.png"));
+			turret2.setContentAreaFilled(false);
+			turret2.setFocusPainted(false);
+			turret2.setBounds(85, 40, 40, 40);
+			turret2.addActionListener(e -> {
+				int price = turret_price[(player.getTech() - 1) * 3 + 2];
+				if(player.getGold() < price) return;
 				
 				showTurretSpace();
-				selectedTurret = "EggAutomatic";
+				selectedTurret = turret_types[(player.getTech() - 1) * 3 + 2];
 				}
 			);
-			eggAutomatic.setVisible(false);
-			add(eggAutomatic);
+			turret2.setVisible(false);
+			add(turret2);
 			
-			primitiveCatapult = new JButton(new ImageIcon("src/Images/PrimitiveCatapult_Button.png"));
-			primitiveCatapult.setContentAreaFilled(false);
-			primitiveCatapult.setFocusPainted(false);
-			primitiveCatapult.setBounds(140, 40, 40, 40);
-			primitiveCatapult.addActionListener(e -> {
-				if(player.getGold() < 500) return; // 500원
+			turret3 = new JButton(new ImageIcon("src/Images/" + turret_types[(player.getTech() - 1) * 3 + 3] + "_Button.png"));
+			turret3.setContentAreaFilled(false);
+			turret3.setFocusPainted(false);
+			turret3.setBounds(140, 40, 40, 40);
+			turret3.addActionListener(e -> {
+				int price = turret_price[(player.getTech() - 1) * 3 + 3];
+				if(player.getGold() < price) return;
 				
 				showTurretSpace();
-				selectedTurret = "PrimitiveCatapult";
+				selectedTurret = turret_types[(player.getTech() - 1) * 3 + 3];
 				}
 			);
-			primitiveCatapult.setVisible(false);
-			add(primitiveCatapult);
-			
-			catapult = new JButton(new ImageIcon("src/Images/Catapult_Button.png"));
-			catapult.setContentAreaFilled(false);
-			catapult.setFocusPainted(false);
-			catapult.setBounds(30, 40, 40, 40);
-			catapult.addActionListener(e -> {
-				if(player.getGold() < 500) return; // 500원
-				
-				showTurretSpace();
-				selectedTurret = "Catapult";
-				}
-			);
-			catapult.setVisible(false);
-			add(catapult);
-			
-			fireCatapult = new JButton(new ImageIcon("src/Images/FireCatapult_Button.png"));
-			fireCatapult.setContentAreaFilled(false);
-			fireCatapult.setFocusPainted(false);
-			fireCatapult.setBounds(85, 40, 40, 40);
-			fireCatapult.addActionListener(e -> {
-				if(player.getGold() < 750) return; // 750원
-				
-				showTurretSpace();
-				selectedTurret = "FireCatapult";
-				}
-			);
-			fireCatapult.setVisible(false);
-			add(fireCatapult);
-			
-			oil = new JButton(new ImageIcon("src/Images/Oil_Button.png"));
-			oil.setContentAreaFilled(false);
-			oil.setFocusPainted(false);
-			oil.setBounds(140, 40, 40, 40);
-			oil.addActionListener(e -> {
-				if(player.getGold() < 1000) return; // 1000원
-				
-				showTurretSpace();
-				selectedTurret = "Oil";
-				}
-			);
-			oil.setVisible(false);
-			add(oil);
-			
+			turret3.setVisible(false);
+			add(turret3);
 			
 			cancelButton = new JButton(new ImageIcon("src/Images/cancel.png"));
 			cancelButton.setContentAreaFilled(false);
@@ -630,45 +549,26 @@ public class GamePanel extends JPanel implements Runnable {
 		public void hideAll() { // 다 숨기기
 			back.setVisible(false);
 			// unit
-			clubman.setVisible(false);
-			slingshotman.setVisible(false);
-			dinoRider.setVisible(false);
-			swordman.setVisible(false);
-			archer.setVisible(false);
-			knight.setVisible(false);
+			unit1.setVisible(false);
+			unit2.setVisible(false);
+			unit3.setVisible(false);
 			// turret
-			rockSlingshot.setVisible(false);
-			eggAutomatic.setVisible(false);
-			primitiveCatapult.setVisible(false);
-			catapult.setVisible(false);
-			fireCatapult.setVisible(false);
-			oil.setVisible(false);
-			
+			turret1.setVisible(false);
+			turret2.setVisible(false);
+			turret3.setVisible(false);
 		}
 		
 		public void showUnits() { // 구매할 수 있는 유닛 보여줌
-			if(player.getTech() == 1) {
-				clubman.setVisible(true);
-				slingshotman.setVisible(true);
-				dinoRider.setVisible(true);
-			} else if(player.getTech() == 2) {
-				swordman.setVisible(true);
-				archer.setVisible(true);
-				knight.setVisible(true);
-			}
+			unit1.setVisible(true);
+			unit2.setVisible(true);
+			unit3.setVisible(true);
 			menuLabel.setText("Unit");
 		}
 		
 		public void showTurrets() { // 구매할 수 있는 터렛 보여줌
-			if(player.getTech() == 1) {
-				rockSlingshot.setVisible(true);
-				eggAutomatic.setVisible(true);
-				primitiveCatapult.setVisible(true);
-			} else if(player.getTech() == 2) {
-				catapult.setVisible(true);
-				fireCatapult.setVisible(true);
-				oil.setVisible(true);
-			}
+			turret1.setVisible(true);
+			turret2.setVisible(true);
+			turret3.setVisible(true);
 			menuLabel.setText("Turret");
 		}
 		
@@ -699,6 +599,18 @@ public class GamePanel extends JPanel implements Runnable {
 			hideAll();
 			cancelButton.setVisible(true);
 			menuLabel.setText("Sell");
+		}
+		
+		public void updateButtons() {
+			unit1.setIcon(new ImageIcon("src/Images/" + unit_types[(player.getTech() - 1) * 3 + 1] +"_Button.png"));
+			unit2.setIcon(new ImageIcon("src/Images/" + unit_types[(player.getTech() - 1) * 3 + 2] +"_Button.png"));
+			unit3.setIcon(new ImageIcon("src/Images/" + unit_types[(player.getTech() - 1) * 3 + 3] +"_Button.png"));
+			
+			turret1.setIcon(new ImageIcon("src/Images/" + turret_types[(player.getTech() - 1) * 3 + 1] +"_Button.png"));
+			turret2.setIcon(new ImageIcon("src/Images/" + turret_types[(player.getTech() - 1) * 3 + 2] +"_Button.png"));
+			turret3.setIcon(new ImageIcon("src/Images/" + turret_types[(player.getTech() - 1) * 3 + 3] +"_Button.png"));
+			
+			specialPanel.updateButtons();
 		}
 		
 		public void paintComponent(Graphics g) {
@@ -952,7 +864,6 @@ public class GamePanel extends JPanel implements Runnable {
 		for(int i = 0; i < enemy_Bullet.size(); i++) { // 적군 bullet action
 			Bullet bullet = enemy_Bullet.get(i);
 			bullet.action();
-			System.out.println("123");
 			
 			if(bullet.getY() > 450) // 바닥에 박힘
 				enemy_Bullet.remove(i);

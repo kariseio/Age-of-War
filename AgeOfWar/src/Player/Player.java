@@ -1,6 +1,8 @@
 package Player;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.swing.ImageIcon;
 
@@ -34,6 +36,7 @@ public class Player {
 	private Turret[] turrets;
 	public boolean[] hasTurret;
 	private ArrayList<Bullet> bullets;
+	private Queue<Unit> queue = new LinkedList<>(); // 유닛 뽑을 때 대기열
 	
 	public Player(boolean isEnemy) {
 		units = new ArrayList<>();
@@ -41,10 +44,10 @@ public class Player {
 		hasTurret = new boolean[4];
 		bullets = new ArrayList<>();
 		
-		maxHealth = 500;
-		health = 500;
+		maxHealth = 50000;
+		health = 50000;
 		gold = 150;
-		exp = 0;
+		exp = 100000;
 		turretSpace = 1;
 		tech = 1;
 		
@@ -64,6 +67,28 @@ public class Player {
 	}
 	public void addUnits(Unit unit) {
 		units.add(unit);
+	}
+	public void addToQueue(String unit) {
+		switch(unit) {
+		case "Clubman":
+			queue.add(new Clubman(false));
+			break;
+		case "Slingshotman":
+			queue.add(new Slingshotman(false));
+			break;
+		case "DinoRider":
+			queue.add(new DinoRider(false));
+			break;
+		case "Swordman":
+			queue.add(new Swordman(false));
+			break;
+		case "Archer":
+			queue.add(new Archer(false));
+			break;
+		case "Knight":
+			queue.add(new Knight(false));
+			break;
+		}
 	}
 	public void addEUnits(String unit) {
 		switch(unit) {
@@ -153,6 +178,10 @@ public class Player {
 	public ImageIcon getBaseImg() {
 		return baseImg;
 	}
+	public Queue getQueue() {
+		return queue;
+	}
+	
 	
 	public void hit(int power) {
 		if(health > 0)

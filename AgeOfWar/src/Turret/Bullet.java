@@ -62,7 +62,6 @@ public class Bullet {
 		
 		degree = Math.atan2(y - unitY, x - unitX);
 		
-		System.out.println(degree);
 		for(int i = 0; i < 3; i++) {
 			player.addBullets(new Bullet(100 + bulletId, x, y, (int) (damage * 0.7), 1.5, degree + (Math.random() * 0.6 -0.3))); // 각도 0.7배 ~ 1.3배
 		}

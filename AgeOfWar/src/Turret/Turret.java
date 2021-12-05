@@ -51,7 +51,6 @@ public class Turret {
 			}
 		} else { // 적군 터렛
 			if(player.getUnits().size() == 0) return;
-			System.out.println("혹시 여기?");
 			if(dist(x, y, player.getUnits().get(0).getX() + player.getUnits().get(0).getWidth(), player.getUnits().get(0).getY()) <= range) { // 적군이 사거리 안으로 들어왔을때
 				if(timeCount >= shootSpeed) {
 					enemy.addBullets(new Bullet(bulletId, x, y, player.getUnits().get(0).getX() + player.getUnits().get(0).getWidth(), player.getUnits().get(0).getY() + (int)(player.getUnits().get(0).getHeight()*0.2), damage, bulletSpeed));
