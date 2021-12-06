@@ -63,16 +63,19 @@ public class Player {
 		hasTurret = new boolean[4];
 		bullets = new ArrayList<>();
 		
-		maxHealth = 50000;
-		health = 50000;
-		gold = 1500000;
-		exp = 100000;
-		turretSpace = 4;
-		tech = 5;
+		maxHealth = 500;
+		health = 500;
+		gold = 175;
+		exp = 0;
+		turretSpace = 1;
+		tech = 1;
 		
 		this.isEnemy = isEnemy;
 		
-		baseImg = new ImageIcon("src/Images/base"+tech+".png");
+		if(isEnemy == false)
+			baseImg = new ImageIcon("src/Images/base"+tech+".png");
+		else
+			baseImg = new ImageIcon("src/Images/base"+tech+"_enemy.png");
 	}
 	
 	public void updateGold(int gold) {
@@ -247,6 +250,8 @@ public class Player {
 		hasTurret[index] = true;
 	}
 	public void sellTurret(int index) { // 터렛 판매
+		if(hasTurret[index] == false) return;
+		
 		updateGold((int)Math.round(turrets[index].getPrice()*0.5)); // 판매시 0.5만큼 돌려줌
 		turrets[index] = null; // 할당 해제하고
 		hasTurret[index] = false; // 터렛 없음으로 변경
@@ -296,7 +301,11 @@ public class Player {
 		tech++;
 		maxHealth += 300 * tech;
 		health += 300 * tech;
-		baseImg = new ImageIcon("src/Images/base"+tech+".png");
+		
+		if(isEnemy == false)
+			baseImg = new ImageIcon("src/Images/base"+tech+".png");
+		else
+			baseImg = new ImageIcon("src/Images/base"+tech+"_enemy.png");
 	}
 	
 	public void buildTurretSpace() {

@@ -1,9 +1,12 @@
 package Panel;
 
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -15,6 +18,8 @@ public class ResultPanel extends JPanel {
 	private JLabel exitLabel;
 	private boolean isUp;
 	MainFrame mainFrame;
+	
+	private Image background = new ImageIcon("src/Images/background.png").getImage();
 	
 	public ResultPanel(MainFrame mainFrame, boolean win) {
 		setLayout(null);
@@ -70,5 +75,9 @@ public class ResultPanel extends JPanel {
 		
 		public void keyTyped(KeyEvent e) {}
 		public void keyReleased(KeyEvent e) {}
+	}
+	
+	public void paintComponent(Graphics g) {
+		g.drawImage(background, 0, 0, null);
 	}
 }

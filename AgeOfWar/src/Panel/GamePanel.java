@@ -179,10 +179,6 @@ public class GamePanel extends JPanel implements Runnable {
 		});
 		add(xSpeed);
 		
-//		enemy.addTurrets(0, "RockSlingshot", true);
-//		enemy.addTurrets(1, "EggAutomatic", true);
-		enemy.addTurrets(2, "PrimitiveCatapult", true);
-		
 		th = new Thread(this);
 		th.start();
 	}
@@ -663,7 +659,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		buffer.drawImage(background, 0, 0, null); // 배경 이미지
 		buffer.drawImage(player.getBaseImg().getImage(), -100, 290, null); // 아군 기지 시작 X : 100
-		buffer.drawImage(enemy.getBaseImg().getImage(), 850+enemy.getBaseImg().getIconWidth(), 290, 850, 290+enemy.getBaseImg().getIconHeight(), 0, 0, enemy.getBaseImg().getIconWidth(), enemy.getBaseImg().getIconHeight(), this); // 적군 기지 시작 X : 870
+		buffer.drawImage(enemy.getBaseImg().getImage(), 850, 290, null); // 아군 기지 시작 X : 100
 		
 		// 대기열
 		buffer.setColor(Color.GRAY);

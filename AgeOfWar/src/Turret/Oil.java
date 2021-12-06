@@ -5,16 +5,18 @@ import javax.swing.ImageIcon;
 import Player.Player;
 
 public class Oil extends Turret {
-	private final int shot = 30;
+	private final int shot = 60;
 	
 	public Oil(int index, boolean isEnemy) {
 		shootSpeed = 300;
 		bulletId = 5;
 		bulletSpeed = 1;
-		damage = 2;
-		range = 100;
+		damage = 4;
+		range = 300;
 		price = 1000;
 		timeCount = 0;
+		
+		img = new ImageIcon("src/Images/Oil.png");
 		
 		this.isEnemy = isEnemy;
 		
@@ -23,7 +25,7 @@ public class Oil extends Turret {
 			y = 350 - 40 * index;
 			img = new ImageIcon("src/Images/Oil.png");
 		} else {
-			x = 920;
+			x = 960 - img.getIconWidth();
 			y = 350 - 40 * index;
 			img = new ImageIcon("src/Images/Oil_enemy.png");
 		}
@@ -36,7 +38,7 @@ public class Oil extends Turret {
 			if(dist(x + img.getIconWidth(), enemy.getUnits().get(0).getX()) <= range) { // 적군이 사거리 안으로 들어왔을때
 				if(timeCount >= shootSpeed) {
 					if(timeCount < shootSpeed + shot) {
-						player.addBullets(new Bullet(bulletId, x + img.getIconWidth() , y, enemy.getUnits().get(0).getX(), enemy.getUnits().get(0).getY(), damage, bulletSpeed));
+						player.addBullets(new Bullet(bulletId, x + img.getIconWidth() , y+30, x + img.getIconWidth(), enemy.getUnits().get(0).getY(), damage, bulletSpeed));
 						timeCount++;
 					} else {
 						timeCount = 0;
@@ -49,13 +51,10 @@ public class Oil extends Turret {
 			}
 		} else { // 적군 터렛
 			if(player.getUnits().size() == 0) return;
-			System.out.println(timeCount + " 여기는 아니겠지? ");
 			if(dist(x, player.getUnits().get(0).getX() + player.getUnits().get(0).getWidth()) <= range) { // 적군이 사거리 안으로 들어왔을때
-				System.out.println(timeCount);
 				if(timeCount >= shootSpeed) {
-					System.out.println(timeCount + " 2");
 					if(timeCount < shootSpeed + shot) {
-						enemy.addBullets(new Bullet(bulletId, x, y, player.getUnits().get(0).getX() + player.getUnits().get(0).getWidth(), player.getUnits().get(0).getY(), damage, bulletSpeed));
+						enemy.addBullets(new Bullet(bulletId, x, y+30, x, player.getUnits().get(0).getY(), damage, bulletSpeed));
 						timeCount++;
 					} else {
 						timeCount = 0;
@@ -67,6 +66,5 @@ public class Oil extends Turret {
 				timeCount = 0;
 			}
 		}
-		System.out.println(timeCount + " 여기는? ");
 	}
 }
