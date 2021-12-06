@@ -57,10 +57,10 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private String selectedTurret;
 	
-	private String[] unit_types = new String[] {"", "Clubman", "Slingshotman", "DinoRider", "Swordman", "Archer", "Knight", "Dueler", "Mousquettere", "Cannoner"};
-	private int[] unit_price = new int[] {0, 15, 25, 100, 50, 75, 500, 200, 400, 1000};
-	private String[] turret_types = new String[] {"", "RockSlingshot", "EggAutomatic", "PrimitiveCatapult", "Catapult", "FireCatapult", "Oil", "SmallCannon", "LargeCannon", "ExplosivesCannon"};
-	private int[] turret_price = new int[] {0, 100, 200, 500, 500, 750, 1000, 1500, 3000, 6000};
+	private String[] unit_types = new String[] {"", "Clubman", "Slingshotman", "DinoRider", "Swordman", "Archer", "Knight", "Dueler", "Mousquettere", "Cannoner", "MeleeInfantry", "Infantry", "Tank"};
+	private int[] unit_price = new int[] {0, 15, 25, 100, 50, 75, 500, 200, 400, 1000, 1500, 2000, 7000};
+	private String[] turret_types = new String[] {"", "RockSlingshot", "EggAutomatic", "PrimitiveCatapult", "Catapult", "FireCatapult", "Oil", "SmallCannon", "LargeCannon", "ExplosivesCannon", "SingleTurret", "RocketTurret", "DoubleTurret"};
+	private int[] turret_price = new int[] {0, 100, 200, 500, 500, 750, 1000, 1500, 3000, 6000, 7000, 9000, 14000};
 	private int unit_type;
 	
 	private int timer = 0;
@@ -178,9 +178,9 @@ public class GamePanel extends JPanel implements Runnable {
 		});
 		add(xSpeed);
 		
-		enemy.addTurrets(0, "RockSlingshot", true);
-		enemy.addTurrets(1, "EggAutomatic", true);
-//		enemy.addTurrets(2, "PrimitiveCatapult", true);
+//		enemy.addTurrets(0, "RockSlingshot", true);
+//		enemy.addTurrets(1, "EggAutomatic", true);
+		enemy.addTurrets(2, "PrimitiveCatapult", true);
 		
 		th = new Thread(this);
 		th.start();
@@ -278,15 +278,17 @@ public class GamePanel extends JPanel implements Runnable {
 			special.setFocusPainted(false);
 			special.addActionListener(e -> {
 				if(player.getTech() == 1) { // 스페셜 1
-					for(int i = 0; i < 15; i++) {
-						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 100, 2));
+					for(int i = 0; i < 20; i++) {
+						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 200, 2));
 					}
 				} else if(player.getTech() == 2) { // 스페셜 2
-					for(int i = 0; i < 15; i++) {
-						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 150, 3));
+					for(int i = 0; i < 40; i++) {
+						player.addBullets(new Bullet(200 + player.getTech(), (int)(Math.random() * 750 + 100), -(int)(Math.random() * 2000 + 200), (int)(Math.random() * 750 + 100), 500, 200, 3));
 					}
 				} else if(player.getTech() == 3) {
-					special3 = 1500;
+					special3 = 1200;
+				} else if(player.getTech() == 4) {
+					player.addBullets(new Bullet(2040, 0, 110, 1000, 110, 0, 2));
 				}
 			});
 			add(special);
@@ -643,7 +645,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		buffer.setColor(Color.RED);
 		if(queueCount != 0)
-			buffer.fillRect(220, 10, 400/queueUnit.getQueueTime() * queueCount, 15);
+			buffer.fillRect(220, 10, (int)Math.round(400.0/queueUnit.getQueueTime() * queueCount), 15);
 		if(isQueue == true)
 			buffer.fillRect(220, 35, 15, 15);
 		for(int i = 0; i < queue.size(); i++) {
@@ -773,6 +775,14 @@ public class GamePanel extends JPanel implements Runnable {
 			Bullet bullet = player_Bullet.get(i);
 			bullet.action();
 			
+			if(bullet.getBulletId() == 2040) { // 스페셜 4 전투기
+				if(bullet.getX() > 100 && bullet.getX() < 850) {
+					if((int)bullet.getX() % 30 == 0) {
+						player.addBullets(new Bullet(2041, bullet.getX(), bullet.getY(), bullet.getX(), 450, 400, 2));
+					}
+				}
+			}
+			
 			if(bullet.getY() > 450) // 바닥에 박힘
 				player_Bullet.remove(i);
 			
@@ -800,7 +810,7 @@ public class GamePanel extends JPanel implements Runnable {
 				unit_level++;
 			}
 		}
-		if(tech_timer == 8000) {
+		if(tech_timer == 8000) { // 8000마다 테크 업 + 유닛 레벨 초기화
 			if(enemy.getTech() != 5) {
 				enemy.techUp();
 				
@@ -845,6 +855,16 @@ public class GamePanel extends JPanel implements Runnable {
 				enemy.sellTurret(1);
 				enemy.addTurrets(2, "ExplosivesCannon", true);
 			}
+		} else if(enemy.getTech() == 4) {
+			if(tech_timer == 5000) {
+				enemy.addTurrets(0, "RocketTurret", true);
+			} else if(tech_timer == 7000) {
+				enemy.sellTurret(2);
+				enemy.sellTurret(0);
+				enemy.addTurrets(1, "DoubleTurret", true);
+			}
+		} else if(enemy.getTech() == 5) {
+			
 		}
 		
 		// 적군 유닛 생산

@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 import Turret.Bullet;
 import Turret.Catapult;
+import Turret.DoubleTurret;
 import Turret.EggAutomatic;
 import Turret.ExplosivesCannon;
 import Turret.FireCatapult;
@@ -15,6 +16,8 @@ import Turret.LargeCannon;
 import Turret.Oil;
 import Turret.PrimitiveCatapult;
 import Turret.RockSlingshot;
+import Turret.RocketTurret;
+import Turret.SingleTurret;
 import Turret.SmallCannon;
 import Turret.Turret;
 import Units.Archer;
@@ -22,10 +25,13 @@ import Units.Cannoner;
 import Units.Clubman;
 import Units.DinoRider;
 import Units.Dueler;
+import Units.Infantry;
 import Units.Knight;
+import Units.MeleeInfantry;
 import Units.Mousquettere;
 import Units.Slingshotman;
 import Units.Swordman;
+import Units.Tank;
 import Units.Unit;
 
 public class Player {
@@ -55,7 +61,7 @@ public class Player {
 		gold = 1500000;
 		exp = 100000;
 		turretSpace = 4;
-		tech = 3;
+		tech = 4;
 		
 		this.isEnemy = isEnemy;
 		
@@ -103,6 +109,15 @@ public class Player {
 		case "Cannoner":
 			queue.add(new Cannoner(false));
 			break;
+		case "MeleeInfantry":
+			queue.add(new MeleeInfantry(false));
+			break;
+		case "Infantry":
+			queue.add(new Infantry(false));
+			break;
+		case "Tank":
+			queue.add(new Tank(false));
+			break;
 		}
 	}
 	public void addEUnits(String unit) {
@@ -133,6 +148,15 @@ public class Player {
 			break;
 		case "Cannoner":
 			units.add(new Cannoner(true));
+			break;
+		case "MeleeInfantry":
+			units.add(new MeleeInfantry(true));
+			break;
+		case "Infantry":
+			units.add(new Infantry(true));
+			break;
+		case "Tank":
+			units.add(new Tank(true));
 			break;
 		}
 	}
@@ -167,6 +191,15 @@ public class Player {
 			break;
 		case "ExplosivesCannon":
 			turrets[index] = new ExplosivesCannon(index, isEnemy);
+			break;
+		case "SingleTurret":
+			turrets[index] = new SingleTurret(index, isEnemy);
+			break;
+		case "RocketTurret":
+			turrets[index] = new RocketTurret(index, isEnemy);
+			break;
+		case "DoubleTurret":
+			turrets[index] = new DoubleTurret(index, isEnemy);
 			break;
 		}
 		
@@ -215,7 +248,6 @@ public class Player {
 		return queue;
 	}
 	
-	
 	public void hit(int power) {
 		if(health > 0)
 			health -= power;
@@ -228,6 +260,7 @@ public class Player {
 	}
 	
 	public void buildTurretSpace() {
-		turretSpace++;
+		if(turretSpace < 4)
+			turretSpace++;
 	}
 }
