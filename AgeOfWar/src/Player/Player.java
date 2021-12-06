@@ -12,27 +12,34 @@ import Turret.DoubleTurret;
 import Turret.EggAutomatic;
 import Turret.ExplosivesCannon;
 import Turret.FireCatapult;
+import Turret.IonCannon;
 import Turret.LargeCannon;
+import Turret.LaserCannon;
 import Turret.Oil;
 import Turret.PrimitiveCatapult;
 import Turret.RockSlingshot;
 import Turret.RocketTurret;
 import Turret.SingleTurret;
 import Turret.SmallCannon;
+import Turret.TitaniumShooter;
 import Turret.Turret;
 import Units.Archer;
+import Units.Blaster;
 import Units.Cannoner;
 import Units.Clubman;
 import Units.DinoRider;
 import Units.Dueler;
+import Units.GodsBlade;
 import Units.Infantry;
 import Units.Knight;
 import Units.MeleeInfantry;
 import Units.Mousquettere;
 import Units.Slingshotman;
+import Units.SuperSoldier;
 import Units.Swordman;
 import Units.Tank;
 import Units.Unit;
+import Units.WarMachine;
 
 public class Player {
 	private int maxHealth;
@@ -61,7 +68,7 @@ public class Player {
 		gold = 1500000;
 		exp = 100000;
 		turretSpace = 4;
-		tech = 4;
+		tech = 5;
 		
 		this.isEnemy = isEnemy;
 		
@@ -118,6 +125,18 @@ public class Player {
 		case "Tank":
 			queue.add(new Tank(false));
 			break;
+		case "GodsBlade":
+			queue.add(new GodsBlade(false));
+			break;
+		case "Blaster":
+			queue.add(new Blaster(false));
+			break;
+		case "WarMachine":
+			queue.add(new WarMachine(false));
+			break;
+		case "SuperSoldier":
+			queue.add(new SuperSoldier(false));
+			break;
 		}
 	}
 	public void addEUnits(String unit) {
@@ -157,6 +176,18 @@ public class Player {
 			break;
 		case "Tank":
 			units.add(new Tank(true));
+			break;
+		case "GodsBlade":
+			units.add(new GodsBlade(true));
+			break;
+		case "Blaster":
+			units.add(new Blaster(true));
+			break;
+		case "WarMachine":
+			units.add(new WarMachine(true));
+			break;
+		case "SuperSoldier":
+			units.add(new SuperSoldier(true));
 			break;
 		}
 	}
@@ -200,6 +231,15 @@ public class Player {
 			break;
 		case "DoubleTurret":
 			turrets[index] = new DoubleTurret(index, isEnemy);
+			break;
+		case "TitaniumShooter":
+			turrets[index] = new TitaniumShooter(index, isEnemy);
+			break;
+		case "LaserCannon":
+			turrets[index] = new LaserCannon(index, isEnemy);
+			break;
+		case "IonCannon":
+			turrets[index] = new IonCannon(index, isEnemy);
 			break;
 		}
 		
