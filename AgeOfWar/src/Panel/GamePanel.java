@@ -756,7 +756,6 @@ public class GamePanel extends JPanel implements Runnable {
 			buffer.fillRect(965, 150, 10, (int)(150 / (enemy.getMaxHealth() / (double)(enemy.getMaxHealth() - enemy.getHealth()))));
 		}
 		g.drawImage(bufImage, 0, 0, this);
-		drawGrid(g);
 	}
 	
 	public void drawGrid(Graphics g) {
@@ -912,13 +911,13 @@ public class GamePanel extends JPanel implements Runnable {
 				enemy.sellTurret(0);
 				enemy.sellTurret(1);
 				enemy.sellTurret(2);
-				enemy.addTurrets(1, "LazerCannon", true);
+				enemy.addTurrets(1, "LaserCannon", true);
 			} else if(tech_timer == 20000) {
 				enemy.buildTurretSpace();
 				enemy.sellTurret(0);
 				enemy.sellTurret(1);
 				enemy.sellTurret(2);
-				enemy.addTurrets(3, "IonRay", true);
+				enemy.addTurrets(3, "IonCannon", true);
 			}
 		}
 		

@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class PrimitiveCatapult extends Turret {
 	public PrimitiveCatapult(int index, boolean isEnemy) {
-		shootSpeed = 140;
+		shootSpeed = 70;
 		bulletId = 3;
 		bulletSpeed = 3;
 		damage = 25;

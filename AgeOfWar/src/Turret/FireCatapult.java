@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class FireCatapult extends Turret {
 	public FireCatapult(int index, boolean isEnemy) {
-		shootSpeed = 140;
+		shootSpeed = 70;
 		bulletId = 4;
 		bulletSpeed = 2;
 		damage = 40;

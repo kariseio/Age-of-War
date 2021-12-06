@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class LargeCannon extends Turret {
 	public LargeCannon(int index, boolean isEnemy) {
-		shootSpeed = 140;
+		shootSpeed = 70;
 		bulletId = 6;
 		bulletSpeed = 6;
 		damage = 70;

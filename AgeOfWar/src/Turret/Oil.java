@@ -8,7 +8,7 @@ public class Oil extends Turret {
 	private final int shot = 60;
 	
 	public Oil(int index, boolean isEnemy) {
-		shootSpeed = 300;
+		shootSpeed = 100;
 		bulletId = 5;
 		bulletSpeed = 1;
 		damage = 4;

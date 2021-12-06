@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class RockSlingshot extends Turret {
 	public RockSlingshot(int index, boolean isEnemy) {
-		shootSpeed = 60;
+		shootSpeed = 30;
 		bulletId = 1;
 		bulletSpeed = 4;
 		damage = 12;

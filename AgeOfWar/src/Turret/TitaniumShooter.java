@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class TitaniumShooter extends Turret {
 	public TitaniumShooter(int index, boolean isEnemy) {
-		shootSpeed = 80;
+		shootSpeed = 40;
 		bulletId = 12;
 		bulletSpeed = 6;
 		damage = 100;

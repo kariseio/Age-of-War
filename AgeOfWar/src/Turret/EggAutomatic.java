@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class EggAutomatic extends Turret {
 	public EggAutomatic(int index, boolean isEnemy) {
-		shootSpeed = 22;
+		shootSpeed = 11;
 		bulletId = 2;
 		bulletSpeed = 10;
 		damage = 5;
