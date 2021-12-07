@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class Swordman extends Unit {
 	public Swordman(boolean isEnemy) {
 		maxHealth = 100;

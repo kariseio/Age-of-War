@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class Blaster extends Unit {
 	public Blaster(boolean isEnemy) {
 		maxHealth = 800;

@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Queue;
 
 import javax.swing.ImageIcon;
@@ -13,18 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.sun.source.doctree.UnknownInlineTagTree;
-
 import Main.MainFrame;
 import Player.Player;
 import Turret.Bullet;
 import Turret.Turret;
-import Units.Archer;
-import Units.Clubman;
-import Units.DinoRider;
-import Units.Knight;
-import Units.Slingshotman;
-import Units.Swordman;
 import Units.Unit;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -706,7 +697,7 @@ public class GamePanel extends JPanel implements Runnable {
 		// 적군 bullet 그리기
 		for(int i = 0; i < enemy_Bullet.size(); i++) {
 			Bullet bullet = enemy_Bullet.get(i);
-			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+".png").getImage(), bullet.getX(), bullet.getY(), null);
+			buffer.drawImage(new ImageIcon("src/Images/Bullet"+ bullet.getBulletId()+"_enemy.png").getImage(), bullet.getX(), bullet.getY(), null);
 		}
 		
 		// 아군 유닛 그리기

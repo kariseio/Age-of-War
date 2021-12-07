@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class MeleeInfantry extends Unit {
 	public MeleeInfantry(boolean isEnemy) {
 		maxHealth = 350;

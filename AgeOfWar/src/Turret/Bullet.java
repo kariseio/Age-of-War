@@ -7,8 +7,6 @@ public class Bullet {
 	private int bulletId;
 	private double x; // 원활한 삼각함수 계산을 위해서 double로 get할때는 int로 전달
 	private double y;
-	private int dirX;
-	private int dirY;
 	private double degree;
 	private int damage;
 	private double speed;

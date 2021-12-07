@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class WarMachine extends Unit {
 	public WarMachine(boolean isEnemy) {
 		maxHealth = 3000;

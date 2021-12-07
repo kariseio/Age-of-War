@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class Mousquettere extends Unit {
 	public Mousquettere(boolean isEnemy) {
 		maxHealth = 160;

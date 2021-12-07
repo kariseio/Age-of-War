@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class Clubman extends Unit {
 	public Clubman(boolean isEnemy) {
 		maxHealth = 55;

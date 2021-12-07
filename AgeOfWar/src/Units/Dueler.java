@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class Dueler extends Unit {
 	public Dueler(boolean isEnemy) {
 		maxHealth = 200;

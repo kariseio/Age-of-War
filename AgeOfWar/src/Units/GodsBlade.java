@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class GodsBlade extends Unit {
 	public GodsBlade(boolean isEnemy) {
 		maxHealth = 1000;

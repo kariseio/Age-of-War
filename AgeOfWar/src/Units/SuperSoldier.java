@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class SuperSoldier extends Unit {
 	public SuperSoldier(boolean isEnemy) {
 		maxHealth = 4000;

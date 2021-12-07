@@ -2,8 +2,6 @@ package Units;
 
 import javax.swing.ImageIcon;
 
-import Player.Player;
-
 public class DinoRider extends Unit {
 	public DinoRider(boolean isEnemy) {
 		maxHealth = 160;
