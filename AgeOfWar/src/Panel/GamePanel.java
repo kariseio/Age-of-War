@@ -400,21 +400,25 @@ public class GamePanel extends JPanel implements Runnable {
 					if(player.getExp() >= 4000) {
 						player.techUp();
 						updateButtons();
+						specialCool = 3000;
 					}
 				} else if(player.getTech() == 2) {
 					if(player.getExp() >= 14000) {
 						player.techUp();
 						updateButtons();
+						specialCool = 3000;
 					}
 				} else if(player.getTech() == 3) {
 					if(player.getExp() >= 45000) {
 						player.techUp();
 						updateButtons();
+						specialCool = 3000;
 					}
 				} else if(player.getTech() == 4) {
 					if(player.getExp() >= 200000) {
 						player.techUp();
 						updateButtons();
+						specialCool = 3000;
 					}
 				}
 			});
